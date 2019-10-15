@@ -4,17 +4,21 @@
 
 EnemyVehicle::EnemyVehicle()
 {
-	position = vect2(0.0f, 0.0f);
-	rotation = 0.0f;
-	velocity = vect2(0.0f, 0.0f);
+	health		= 100.0f;
+
+	position	= vect2(0.0f, 0.0f);
+	rotation	= 0.0f;
+	velocity	= vect2(0.0f, 0.0f);
 }
 
 
-EnemyVehicle::EnemyVehicle(const vect2& pos, const double& rot, const vect2& vel)
+EnemyVehicle::EnemyVehicle(const double& h, const vect2& pos, const double& rot, const vect2& vel)
 {
-	position = pos;
-	rotation = rot;
-	velocity = vel;
+	health		= h;
+
+	position	= pos;
+	rotation	= rot;
+	velocity	= vel;
 }
 
 

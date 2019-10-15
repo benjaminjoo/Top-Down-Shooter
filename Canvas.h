@@ -11,6 +11,8 @@ private:
 	int				width;
 	int				height;
 
+	double			scale;
+
 	SDL_Window*		window;
 	SDL_Renderer*	screen;
 	SDL_Texture*	texture;
@@ -22,7 +24,7 @@ protected:
 	Uint32*			pixelBuffer;
 
 public:
-	Canvas(const int& w, const int& h, const std::string& title);
+	Canvas(const int& w, const int& h, const double& s, const std::string& title);
 	~Canvas();
 
 	void clear();

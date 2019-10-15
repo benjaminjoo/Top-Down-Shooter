@@ -2,6 +2,14 @@
 
 #include <cmath>
 
+
+struct screenCoord
+{
+	int x;
+	int y;
+};
+
+
 struct vect2
 {
 	double x;
@@ -26,8 +34,18 @@ struct vect2
 	inline vect2	operator / (const double& s) { return vect2(this->x / s, this->y / s); }
 	
 	inline double len() { return sqrt(this->x * this->x + this->y * this->y); }
+	inline double lenSquared() { return this->x * this->x + this->y * this->y; }
 	inline vect2 norm() { return *this / this->len(); }
 
 	inline vect2 rot(const vect2& c, const double& a) { ; }
 
+};
+
+
+struct edge
+{
+	vect2 startP;
+	vect2 endP;
+
+	vect2 normal;
 };

@@ -6,6 +6,8 @@ class Vehicle
 {
 protected:
 
+	double	health;
+
 	vect2	position;
 	double	rotation;
 	vect2	velocity;

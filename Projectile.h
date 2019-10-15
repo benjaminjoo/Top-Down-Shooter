@@ -11,15 +11,19 @@ private:
 	vect2	velocity;
 	vect2	acceleration;
 
-	void updateVelocity();
+	double	mass;
+	double  kineticEnergy;
+
+	void updateVelocity();	
 	void updatePosition();
 
 public:
 
 	Projectile();
-	Projectile(const vect2& pos, const double& rot, const vect2& vel, const vect2& acc);
+	Projectile(const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& m);
 	~Projectile();
 
+	double getKineticEnergy();
 	void draw();
 	void update();
 };

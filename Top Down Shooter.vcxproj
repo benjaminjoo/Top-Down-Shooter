@@ -154,6 +154,7 @@
     <ClCompile Include="PlayerVehicle.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Vehicle.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Canvas.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="PlayerVehicle.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Vehicle.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

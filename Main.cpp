@@ -4,11 +4,12 @@
 #include "Canvas.h"
 #include "EventHandler.h"
 #include "Math.h"
+#include "Projectile.h"
 
 int main(int argc, char** argv)
 {
 
-	Canvas Screen(800, 600, "Top Down Shooter");
+	Canvas Screen(800, 600, 1.0f, "Top Down Shooter");
 	EventHandler Controls;
 
 	vect2 A(1.0f, 2.0f);
@@ -24,6 +25,9 @@ int main(int argc, char** argv)
 	std::cout << "Dot product of A and B: " << A * B << std::endl;
 	std::cout << "Length of B: " << B.len() << std::endl;
 	std::cout << "Bn.x: " << Bn.x << "\tBn.y: " << Bn.y << std::endl;
+
+	Projectile bullet(vect2(0.0f, 0.0f), 0.0f, vect2(3.0f, 4.0f), vect2(0.0f, 0.0f), 5.0f);
+	std::cout << "Kinetic energy of bullet: " << bullet.getKineticEnergy() << std::endl;
 
 	while (!Controls.quit)
 	{

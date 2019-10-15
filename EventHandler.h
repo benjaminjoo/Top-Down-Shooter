@@ -11,6 +11,12 @@ public:
 	bool quit;
 	bool paused;
 
+	double turn;
+	double move;
+	double strafe;
+
+	double sensitivity;
+
 	EventHandler();
 	~EventHandler();
 

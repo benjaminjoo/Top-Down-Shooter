@@ -2,10 +2,12 @@
 
 
 
-Canvas::Canvas(const int& w, const int& h, const std::string& title)
+Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& title)
 {
 	width	= w;
 	height	= h;
+
+	scale	= s;
 
 	closed	= false;
 
