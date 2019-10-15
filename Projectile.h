@@ -20,7 +20,7 @@ public:
 	Projectile(const vect2& pos, const double& rot, const vect2& vel, const vect2& acc);
 	~Projectile();
 
-	void drawAll();
-	void updateAll();
+	void draw();
+	void update();
 };
 

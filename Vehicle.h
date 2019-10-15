@@ -4,7 +4,7 @@
 
 class Vehicle
 {
-private:
+protected:
 
 	vect2	position;
 	double	rotation;
@@ -12,9 +12,13 @@ private:
 
 public:
 	Vehicle();
-	//Vehicle(const vect2& pos, const double& rot, const vect2& vel);
 	~Vehicle();
 
+	virtual void updatePosition()	= 0;
+	virtual void actOnCollision()	= 0;
+	virtual void draw()				= 0;
+
+	void checkForCollision();
 
 };
 

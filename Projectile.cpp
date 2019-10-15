@@ -37,13 +37,13 @@ void Projectile::updatePosition()
 }
 
 
-void Projectile::drawAll()
+void Projectile::draw()
 {
 
 }
 
 
-void Projectile::updateAll()
+void Projectile::update()
 {
 	this->updateVelocity();
 	this->updatePosition();
