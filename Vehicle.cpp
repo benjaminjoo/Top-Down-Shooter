@@ -22,3 +22,9 @@ void Vehicle::checkForCollision()
 {
 
 }
+
+
+void Vehicle::shoot()
+{
+
+}

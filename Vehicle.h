@@ -21,6 +21,6 @@ public:
 	virtual void draw()				= 0;
 
 	void checkForCollision();
-
+	void shoot();
 };
 
