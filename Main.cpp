@@ -2,6 +2,10 @@
 #include <SDL/SDL_image.h>
 #include <iostream>
 
+#include <cstdlib>
+#include <ctime>
+
+
 #include "Game.h"
 #include "World.h"
 #include "Canvas.h"
@@ -26,13 +30,34 @@ int main(int argc, char** argv)
 	Shooter.Screen->setClearColour(argbColour(0, 0, 0, 255));
 
 
-	edge* edgePtr = &edge(vect2(100.0f, 500.0f), vect2(900.0f, 400.0f));
-	edgePtr->flip();
-	Space.addEdge(*edgePtr);
-	Space.addEdge(edge(vect2(900.0f, 100.0f), vect2(1150.0f, 300.0f)));
+	Space.addEdge(edge(vect2(138.0, 510.0),		vect2(20.0, 420.0	)));
+	Space.addEdge(edge(vect2(20.0, 420.0),		vect2(173.0, 201.0	)));
+	Space.addEdge(edge(vect2(173.0, 201.0),		vect2(81.0, 70.0	)));
+	Space.addEdge(edge(vect2(81.0, 70.0),		vect2(202.0, 13.0	)));
+	Space.addEdge(edge(vect2(202.0, 13.0),		vect2(627.0, 130.0	)));
+	Space.addEdge(edge(vect2(627.0, 130.0),		vect2(885.0, 38.0	)));
+	Space.addEdge(edge(vect2(885.0, 38.0),		vect2(1105.0, 83.0	)));
+	Space.addEdge(edge(vect2(1105.0, 83.0),		vect2(1149.0, 341.0	)));
+	Space.addEdge(edge(vect2(1149.0, 341.0),	vect2(1031.0, 416.0	)));
+	Space.addEdge(edge(vect2(1031.0, 416.0),	vect2(944.0, 539.0	)));
+	Space.addEdge(edge(vect2(944.0, 539.0),		vect2(744.0, 453.0	)));
+	Space.addEdge(edge(vect2(744.0, 453.0),		vect2(471.0, 555.0	)));
+	Space.addEdge(edge(vect2(471.0, 555.0),		vect2(299.0, 461.0	)));
+	Space.addEdge(edge(vect2(299.0, 461.0),		vect2(138.0, 510.0	)));
 
-	Shooter.addBullet(Projectile(vect2(200.0f, 200.0f), 0.0f, vect2(2.0f, 1.0f), vect2(0.0f, 0.0f), 10.0f));
-	Shooter.addBullet(Projectile(vect2(800.0f, 300.0f), 0.0f, vect2(-1.0f, 0.5f), vect2(0.0f, 0.0f), 10.0f));
+
+
+	srand(time(NULL));
+	unsigned int nBullets = 100;
+	for (unsigned int i = 0; i < nBullets; i++)
+	{
+		vect2 pos;
+		pos.x = 200.0 + (double)(rand() % 800);
+		pos.y = 200.0 + (double)(rand() % 200);
+		double ang = (double)(rand() % 360 / 180.0f * PI);
+		vect2 vel(2.5f * cos(ang), 2.5f * sin(ang));
+		Shooter.addBullet(Projectile(pos, 0.0f, vel, vect2(0.0f, 0.0f), 10.0f));
+	}
 
 	while (Shooter.Controls->isRunning())
 	{
