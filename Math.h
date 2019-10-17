@@ -2,7 +2,7 @@
 
 #include <SDL/SDL.h>
 #include <cmath>
-#include "Utilities.h"
+//#include "Utilities.h"
 
 #define PI		3.141592654
 
@@ -115,13 +115,7 @@ struct vect2
 	inline double len() { return sqrt(this->x * this->x + this->y * this->y); }
 	inline double lenSquared() { return this->x * this->x + this->y * this->y; }
 	inline vect2 norm() { return *this / this->len(); }
-	//inline vect2 rot90() { return vect2(-(this->y), this->x); }
-
 	inline vect2 rot(const double& a) { return vect2(this->x * cos(a) - this->y * sin(a), this->y * cos(a) + this->x * sin(a)); }
-
-	//result.x = temp.x * cos(angle) - temp.y * sin(angle);
-	//result.y = temp.y * cos(angle) + temp.x * sin(angle);
-
 	inline screenCoord onScreen(const double& s) { return screenCoord( (int)(this->x * s), (int)(this->y * s)); }
 
 };
@@ -154,3 +148,5 @@ struct edge
 		normal = (endP - startP).norm().rot(PI * 0.5);
 	}
 };
+
+

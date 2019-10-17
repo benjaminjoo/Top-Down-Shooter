@@ -2,6 +2,7 @@
 
 #include "Vehicle.h"
 #include "Canvas.h"
+#include "EventHandler.h"
 
 class PlayerVehicle: public Vehicle
 {
@@ -11,13 +12,13 @@ private:
 	void actOnCollision();
 
 public:
-	//PlayerVehicle();
+
 	PlayerVehicle(const double& h, const vect2& pos, const double& rot, const vect2& vel);
 	~PlayerVehicle();
 
 
 
-	void update();
+	void update(EventHandler* controls);
 	void draw(Canvas* screen);
 };
 

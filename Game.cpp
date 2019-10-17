@@ -2,15 +2,6 @@
 
 #include "Game.h"
 
-/*
-Game::Game()
-{
-	Level		= World("level01.txt");
-	Screen		= Canvas(1200, 600, 1.0f, "Top Down Shooter");
-	Controls	= EventHandler();
-	Player		= PlayerVehicle(100.0f, vect2(300.0f, 400.0f), 0.0f, vect2(10.0f, 1.0f));
-}
-*/
 
 Game::Game(World* L, Canvas* S, EventHandler* E, PlayerVehicle* P)
 {
@@ -43,37 +34,38 @@ void Game::addBullet(Projectile P)
 
 void Game::updateWorld()
 {
-	Level->draw(Screen);
+	Level->update();
 }
 
 
 void Game::updatePlayer()
 {
-	Player->update();
+	Player->update(Controls);
 }
 
 
 void Game::updateEnemies()
 {
-	for (auto i : Enemies)
+	for (auto i = Enemies.begin(); i != Enemies.end(); ++i)
 	{
-		i.update();
+		i->update();
 	}
 }
 
 
 void Game::updateBullets()
 {
-	for (auto i : Bullets)
+	for (auto i = Bullets.begin(); i != Bullets.end(); ++i)
 	{
-		i.update();
+		i->update();
+		i->checkForCollision(Level->edgeList, Screen);
 	}
 }
 
 
 void Game::drawWorld()
 {
-
+	Level->draw(Screen);
 }
 
 
@@ -85,34 +77,37 @@ void Game::drawPlayer()
 
 void Game::drawEnemies()
 {
-	for (auto i : Enemies)
+	for (auto i = Enemies.begin(); i != Enemies.end(); ++i)
 	{
-		i.draw(Screen);
+		i->draw(Screen);
 	}
 }
 
 
 void Game::drawBullets()
 {
-	for (auto i : Bullets)
+	for (auto i = Bullets.begin(); i != Bullets.end(); ++i)
 	{
-		i.draw(Screen);
+		i->draw(Screen);
 	}
 }
 
 
 void Game::updateAll()
 {
+	Controls->HandleUserEvents();
 	this->updateWorld();
 	this->updatePlayer();
 	this->updateEnemies();
 	this->updateBullets();
+	Controls->ceaseMotion();
 }
 
 
 void Game::drawAll()
 {
-	this->updateWorld();
+	Screen->clear();
+	this->drawWorld();
 	this->drawPlayer();
 	this->drawEnemies();
 	this->drawBullets();

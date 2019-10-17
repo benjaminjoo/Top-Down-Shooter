@@ -6,25 +6,29 @@
 #include "Math.h"
 #include "Utilities.h"
 #include "Canvas.h"
+#include "EventHandler.h"
+#include "Projectile.h"
 
-class World
+
+class World	
 {
+
 private:
 
 	std::string			mapName;
-	std::vector<edge>	edgeList;
 	Uint32				colour;
-
 
 public:
 
-	//World();
+	std::vector<edge>	edgeList;
+
 	World(const std::string& fileName);
 	~World();
 
 	void addEdge(const edge& e);
 	void turnInsideOut();
-	//void draw();
+
+	void update();
 	void draw(Canvas* screen);
 
 };

@@ -19,7 +19,6 @@ public:
 
 	virtual void updatePosition()	= 0;
 	virtual void actOnCollision()	= 0;
-	virtual void update()			= 0;
 	virtual void draw(Canvas*)		= 0;
 
 	void checkForCollision();

@@ -1,7 +1,11 @@
 #pragma once
 
+#include <vector> 
+
 #include "Math.h"
 #include "Canvas.h"
+#include "World.h"
+
 
 class Projectile
 {
@@ -12,22 +16,21 @@ private:
 	vect2	velocity;
 	vect2	acceleration;
 
-	double	mass;
+	double	size;
 	double  kineticEnergy;
 
-	void updateVelocity();	
-	void updatePosition();
-
-	Canvas*	Screen;
+	void actOnCollision();
 
 public:
 
-	Projectile(Canvas* screen);
-	Projectile(Canvas* screen,const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& m);
+	Projectile(const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& d);
 	~Projectile();
 
 	double getKineticEnergy();
-	void draw(Canvas* screen);
 	void update();
+	void updateVelocity();
+	void updatePosition();
+	void checkForCollision(std::vector<edge> walls, Canvas* screen);
+	void draw(Canvas* screen);
 };
 
