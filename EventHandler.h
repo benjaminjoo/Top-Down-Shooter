@@ -4,11 +4,14 @@
 
 class EventHandler
 {
+private:
+
+	bool running;
+
 public:
 
 	SDL_Event event;
 
-	bool quit;
 	bool paused;
 
 	double turn;
@@ -17,8 +20,10 @@ public:
 
 	double sensitivity;
 
-	EventHandler();
+	EventHandler(const double& turn_, const double& move_, const double& strf_, const double& sens_);
 	~EventHandler();
+
+	bool isRunning();
 
 	void HandleUserEvents();
 	void ceaseMotion();

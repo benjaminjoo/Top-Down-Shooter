@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Math.h"
+#include "Canvas.h"
 
 class Projectile
 {
@@ -17,14 +18,16 @@ private:
 	void updateVelocity();	
 	void updatePosition();
 
+	Canvas*	Screen;
+
 public:
 
-	Projectile();
-	Projectile(const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& m);
+	Projectile(Canvas* screen);
+	Projectile(Canvas* screen,const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& m);
 	~Projectile();
 
 	double getKineticEnergy();
-	void draw();
+	void draw(Canvas* screen);
 	void update();
 };
 

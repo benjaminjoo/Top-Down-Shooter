@@ -1,7 +1,10 @@
 #pragma once
 
+#include <SDL/SDL.h>
 #include <cmath>
+#include "Utilities.h"
 
+#define PI		3.141592654
 
 template <class T>
 void swap(T& a, T& b)
@@ -101,17 +104,23 @@ struct vect2
 		y = y_;
 	}
 
-	inline vect2	operator + (const vect2& v)	{ return vect2(this->x + v.x, this->y + v.y); }
-	inline vect2	operator - (const vect2& v) { return vect2(this->x - v.x, this->y - v.y); }
-	inline double	operator * (const vect2& v) { return this->x* v.x + this->y * v.y; }
-	inline vect2	operator * (const double& s) { return vect2(this->x * s, this->y * s); }
-	inline vect2	operator / (const double& s) { return vect2(this->x / s, this->y / s); }
+	inline vect2	operator +	(const vect2& v)	{ return vect2(this->x + v.x, this->y + v.y);	}
+	inline vect2	operator -	(const vect2& v)	{ return vect2(this->x - v.x, this->y - v.y);	}
+	inline vect2	operator += (const vect2& v)	{ return vect2(this->x += v.x, this->y += v.y); }
+	inline vect2	operator -= (const vect2& v)	{ return vect2(this->x -= v.x, this->y -= v.y); }
+	inline double	operator *	(const vect2& v)	{ return this->x* v.x + this->y * v.y;			}
+	inline vect2	operator *	(const double& s)	{ return vect2(this->x * s, this->y * s);		}
+	inline vect2	operator /	(const double& s)	{ return vect2(this->x / s, this->y / s);		}
 	
 	inline double len() { return sqrt(this->x * this->x + this->y * this->y); }
 	inline double lenSquared() { return this->x * this->x + this->y * this->y; }
 	inline vect2 norm() { return *this / this->len(); }
+	//inline vect2 rot90() { return vect2(-(this->y), this->x); }
 
-	inline vect2 rot(const vect2& c, const double& a) { ; }
+	inline vect2 rot(const double& a) { return vect2(this->x * cos(a) - this->y * sin(a), this->y * cos(a) + this->x * sin(a)); }
+
+	//result.x = temp.x * cos(angle) - temp.y * sin(angle);
+	//result.y = temp.y * cos(angle) + temp.x * sin(angle);
 
 	inline screenCoord onScreen(const double& s) { return screenCoord( (int)(this->x * s), (int)(this->y * s)); }
 
@@ -124,4 +133,24 @@ struct edge
 	vect2 endP;
 
 	vect2 normal;
+
+	edge()
+	{
+		startP	= vect2(0.0f, 0.0f);
+		endP	= vect2(0.0f, 0.0f);
+		normal	= vect2(0.0f, 0.0f);
+	}
+
+	edge(const vect2& p, const vect2& q)
+	{
+		startP	= p;
+		endP	= q;
+		normal	= (endP - startP).norm().rot(PI * 0.5);
+	}
+
+	void flip()
+	{
+		swap(startP, endP);
+		normal = (endP - startP).norm().rot(PI * 0.5);
+	}
 };

@@ -40,7 +40,13 @@ void EnemyVehicle::actOnCollision()
 }
 
 
-void EnemyVehicle::draw()
+void EnemyVehicle::update()
+{
+
+}
+
+
+void EnemyVehicle::draw(Canvas* screen)
 {
 
 }

@@ -1,6 +1,33 @@
+#include <iostream>
+
 #include "Canvas.h"
+#include "Utilities.h"
 
+/*
+Canvas::Canvas()
+{
+	width			= 800;
+	height			= 600;
 
+	scale			= 1.0;
+
+	closed			= false;
+
+	clearColour		= 0;
+
+	pixelBuffer		= new Uint32[800 * 600];
+
+	SDL_Init(SDL_INIT_EVERYTHING);
+
+	window = SDL_CreateWindow("Untitled", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, 0);
+
+	screen = SDL_CreateRenderer(window, -1, 0);
+
+	texture = SDL_CreateTexture(screen, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, 800, 600);
+
+	SDL_ShowCursor(SDL_DISABLE);
+}
+*/
 
 Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& title)
 {
@@ -11,9 +38,9 @@ Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& t
 
 	closed			= false;
 
-	clearColour = 0;
+	clearColour		= 0;
 
-	pixelBuffer = new Uint32[width * height];
+	pixelBuffer		= new Uint32[width * height];
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -24,6 +51,8 @@ Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& t
 	texture = SDL_CreateTexture(screen, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, width, height);
 
 	SDL_ShowCursor(SDL_DISABLE);
+
+	std::cout << "Canvas created succesfully..." << std::endl;
 }
 
 
@@ -36,15 +65,23 @@ Canvas::~Canvas()
 	SDL_DestroyWindow(window);
 
 	delete[] pixelBuffer;
+
+	std::cout << "Canvas destroyed succesfully..." << std::endl;
 }
 
-
+/*
 void Canvas::setClearColour(	const unsigned char& a,
 								const unsigned char& r,
 								const unsigned char& g,
 								const unsigned char& b)
 {
 	clearColour = (a << 24) | (r << 16) | (g << 8) | (b << 0);
+}
+*/
+
+void Canvas::setClearColour(Uint32 col)
+{
+	clearColour = col;
 }
 
 
@@ -70,6 +107,9 @@ int Canvas::getWidth() { return width; }
 
 
 int Canvas::getHeight() { return height; }
+
+
+double Canvas::getScale() { return scale; }
 
 
 void Canvas::drawLine(const screenCoord& startP, const screenCoord& endP, const Uint32& colour)
@@ -231,23 +271,31 @@ void Canvas::drawBoundingBox(boundingBoxScreen BB, const Uint32& colour)
 {
 	BB.clipToScreen(width, height);
 
-	for (int j = BB.topLeft.y; j <= BB.bottomRight.y; j++)
-	{
-		for (int i = BB.topLeft.x; i <= BB.bottomRight.x; i++)
-		{
-			if (j == BB.topLeft.y		||
-				j == BB.bottomRight.y	||
-				i == BB.topLeft.x		||
-				i == BB.bottomRight.x)
-			{
-				pixelBuffer[j * width + i] = colour;
-			}
-		}
-	}
+	this->drawLine(BB.topLeft, screenCoord(BB.bottomRight.x, BB.topLeft.y), 255);
+
+	this->drawLine(screenCoord(BB.topLeft.x, BB.bottomRight.y), BB.bottomRight, 255);
+
+	this->drawLine(BB.topLeft, screenCoord(BB.topLeft.x, BB.bottomRight.y), 255);
+
+	this->drawLine(screenCoord(BB.bottomRight.x, BB.topLeft.y), BB.bottomRight, 255);
 }
 
 
-void Canvas::drawCircle(const screenCoord& centreP, const unsigned int& radius, const Uint32& colour)
+void Canvas::drawCircle(const screenCoord& centreP, const int& radius, const Uint32& colour)
 {
+	boundingBoxScreen bb(centreP.x - radius, centreP.y - radius, centreP.x + radius, centreP.y + radius);
+	bb.clipToScreen(width, height);
 
+	for (int j = bb.topLeft.y; j <= bb.bottomRight.y; j++)
+	{
+		for (int i = bb.topLeft.x; i <= bb.bottomRight.x; i++)
+		{
+			int pos = (i - centreP.x) * (i - centreP.x) + (j - centreP.y) * (j - centreP.y);
+			int brightness = 255 - (int)((double)pos / ((double)radius * (double)radius) * 255);
+			if (pos <= (radius * radius))
+			{
+				pixelBuffer[j * width + i] = argbColour(0, brightness, brightness, 255);
+			}
+		}
+	}
 }

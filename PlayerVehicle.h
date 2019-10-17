@@ -1,16 +1,23 @@
 #pragma once
 
 #include "Vehicle.h"
+#include "Canvas.h"
 
 class PlayerVehicle: public Vehicle
 {
-public:
-	PlayerVehicle();
-	PlayerVehicle(const double& h, const vect2& pos, const double& rot, const vect2& vel);
-	~PlayerVehicle();
+private:
 
 	void updatePosition();
 	void actOnCollision();
-	void draw();
+
+public:
+	//PlayerVehicle();
+	PlayerVehicle(const double& h, const vect2& pos, const double& rot, const vect2& vel);
+	~PlayerVehicle();
+
+
+
+	void update();
+	void draw(Canvas* screen);
 };
 

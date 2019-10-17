@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Math.h"
+#include "Canvas.h"
 
 class Vehicle
 {
@@ -18,7 +19,8 @@ public:
 
 	virtual void updatePosition()	= 0;
 	virtual void actOnCollision()	= 0;
-	virtual void draw()				= 0;
+	virtual void update()			= 0;
+	virtual void draw(Canvas*)		= 0;
 
 	void checkForCollision();
 	void shoot();

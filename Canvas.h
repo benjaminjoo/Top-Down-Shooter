@@ -4,6 +4,7 @@
 #include <memory>
 #include <SDL/SDL.h>
 #include "Math.h"
+#include "Utilities.h"
 
 class Canvas
 {
@@ -26,22 +27,26 @@ protected:
 	Uint32			clearColour;
 
 public:
+	//Canvas();
 	Canvas(const int& w, const int& h, const double& s, const std::string& title);
 	~Canvas();
 
-	void setClearColour(	const unsigned char& a,
-							const unsigned char& r,
-							const unsigned char& g,
-							const unsigned char& b	);
+	//void setClearColour(	const unsigned char& a,
+	//						const unsigned char& r,
+	//						const unsigned char& g,
+	//						const unsigned char& b	);
+	void setClearColour(Uint32 col);
+
 
 	void clear();
 	void update();
 
 	int getWidth();
 	int getHeight();
+	double getScale();
 
 	void drawLine(const screenCoord& startP, const screenCoord& endP, const Uint32& colour);
 	void drawBoundingBox(boundingBoxScreen BB, const Uint32& colour);
-	void drawCircle(const screenCoord& centreP, const unsigned int& radius, const Uint32& colour);
+	void drawCircle(const screenCoord& centreP, const int& radius, const Uint32& colour);
 };
 
