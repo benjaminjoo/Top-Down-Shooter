@@ -11,6 +11,7 @@ EventHandler::EventHandler(const double& turn_, const double& move_, const doubl
 	event			= { 0 };
 
 	paused			= false;
+	firing			= false;
 
 	turn			= turn_;
 	move			= move_;
@@ -202,8 +203,17 @@ void EventHandler::HandleUserEvents()
 
 	if (event.type == SDL_MOUSEMOTION)
 	{
-		//std::cout << "x: " << event.motion.x << "\ty: " << event.motion.y << std::endl;
 		turn = (double)event.motion.x * sensitivity;
+	}
+
+	if (event.button.button == SDL_BUTTON_LEFT && event.button.state == SDL_PRESSED)
+	{
+		firing = true;
+	}
+
+	if (event.button.button == SDL_BUTTON_LEFT && event.button.state == SDL_RELEASED)
+	{
+		firing = false;
 	}
 }
 

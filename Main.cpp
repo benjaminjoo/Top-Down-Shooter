@@ -15,20 +15,23 @@
 #include "EventHandler.h"
 #include "Math.h"
 #include "Utilities.h"
+#include "Texture.h"
 
 
 int main(int argc, char** argv)
 {
 
 	World Space("The Final Frontier");
-	Canvas Screen(1200, 600, 1.0f, "Untitled");
+	Canvas Screen(1200, 600, 0.5f, "Untitled");
 	EventHandler Controls(0.0f, 0.0f, 0.0f, 1.0f);
-	PlayerVehicle Pilot(100.0f, vect2(300.0f, 400.0f), 0.0f, vect2(1.0f, -1.0f));
+	PlayerVehicle Pilot(120.0f, 160.0f, 100.0f, vect2(300.0f, 400.0f), 0.0f, vect2(1.0f, -1.0f));
 	Game Shooter(&Space, &Screen, &Controls, &Pilot);
 
 
-	Shooter.Screen->setClearColour(argbColour(0, 0, 0, 255));
+	Shooter.Screen->setClearColour(argbColour(0, 0, 0, 0));
 
+	Shooter.addTexture(Texture("Assets/blue.jpg"));
+	Shooter.addTexture(Texture("Assets/millenium_falcon_top_view_small.jpg"));
 
 	Space.addEdge(edge(vect2(138.0, 510.0),		vect2(20.0, 420.0	)));
 	Space.addEdge(edge(vect2(20.0, 420.0),		vect2(173.0, 201.0	)));
@@ -47,17 +50,17 @@ int main(int argc, char** argv)
 
 
 
-	srand(time(NULL));
-	unsigned int nBullets = 100;
-	for (unsigned int i = 0; i < nBullets; i++)
-	{
-		vect2 pos;
-		pos.x = 200.0 + (double)(rand() % 800);
-		pos.y = 200.0 + (double)(rand() % 200);
-		double ang = (double)(rand() % 360 / 180.0f * PI);
-		vect2 vel(2.5f * cos(ang), 2.5f * sin(ang));
-		Shooter.addBullet(Projectile(pos, 0.0f, vel, vect2(0.0f, 0.0f), 10.0f));
-	}
+	//srand(time(NULL));
+	//unsigned int nBullets = 10;
+	//for (unsigned int i = 0; i < nBullets; i++)
+	//{
+	//	vect2 pos;
+	//	pos.x = 200.0 + (double)(rand() % 800);
+	//	pos.y = 200.0 + (double)(rand() % 200);
+	//	double ang = (double)(rand() % 360 / 180.0f * PI);
+	//	vect2 vel(2.5f * cos(ang), 2.5f * sin(ang));
+	//	Shooter.addBullet(Projectile(pos, 0.0f, vel, vect2(0.0f, 0.0f), 25.0f));
+	//}
 
 	while (Shooter.Controls->isRunning())
 	{

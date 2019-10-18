@@ -23,7 +23,7 @@ Projectile::~Projectile()
 
 void Projectile::updateVelocity()
 {
-	velocity += acceleration;
+	velocity *= BULLET_DRAG;
 }
 
 
@@ -62,7 +62,10 @@ double Projectile::getKineticEnergy()
 
 void Projectile::draw(Canvas* screen)
 {
-	screen->drawCircle(position.onScreen(screen->getScale()), (int)(size * 0.5f), 255);
+	if (getKineticEnergy() >= BULLET_KINETIC_ENERGY_CUTOFF)
+	{
+		screen->drawCircle(position.onScreen(screen->getScale()), (int)(BULLET_DIAMETER * 0.5f), 255);
+	}	
 }
 
 

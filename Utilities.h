@@ -13,3 +13,9 @@ double distPoint2Line(vect2 P, edge L);
 
 
 bool pointIsAroundLine(vect2 P, edge L);
+
+
+int GetYMax3(screenCoord* p);
+
+
+int GetYMin3(screenCoord* p);

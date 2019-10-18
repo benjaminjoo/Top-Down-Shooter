@@ -13,6 +13,7 @@ public:
 	SDL_Event event;
 
 	bool paused;
+	bool firing;
 
 	double turn;
 	double move;

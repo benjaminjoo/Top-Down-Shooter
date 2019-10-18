@@ -13,12 +13,10 @@ private:
 
 public:
 
-	PlayerVehicle(const double& h, const vect2& pos, const double& rot, const vect2& vel);
+	PlayerVehicle(const double& w, const double& l, const double& h, const vect2& pos, const double& rot, const vect2& vel);
 	~PlayerVehicle();
+	
 
-
-
-	void update(EventHandler* controls);
-	void draw(Canvas* screen);
+	void update(EventHandler* controls, std::vector<Projectile>& bullets);
 };
 

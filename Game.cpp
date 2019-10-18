@@ -32,6 +32,12 @@ void Game::addBullet(Projectile P)
 }
 
 
+void Game::addTexture(Texture T)
+{
+	Textures.push_back(T);
+}
+
+
 void Game::updateWorld()
 {
 	Level->update();
@@ -40,7 +46,7 @@ void Game::updateWorld()
 
 void Game::updatePlayer()
 {
-	Player->update(Controls);
+	Player->update(Controls, Bullets);
 }
 
 
@@ -71,7 +77,7 @@ void Game::drawWorld()
 
 void Game::drawPlayer()
 {
-	Player->draw(Screen);
+	Player->draw(Screen, &Textures[Player->getTextureID()]);
 }
 
 

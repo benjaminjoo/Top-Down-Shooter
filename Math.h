@@ -2,9 +2,13 @@
 
 #include <SDL/SDL.h>
 #include <cmath>
-//#include "Utilities.h"
 
 #define PI		3.141592654
+
+#define BULLET_DRAG							 0.99f
+#define BULLET_DIAMETER						5.0f
+#define BULLET_MUZZLE_VELOCITY				50.0f	
+#define BULLET_KINETIC_ENERGY_CUTOFF		 10.0f
 
 template <class T>
 void swap(T& a, T& b)
@@ -108,9 +112,11 @@ struct vect2
 	inline vect2	operator -	(const vect2& v)	{ return vect2(this->x - v.x, this->y - v.y);	}
 	inline vect2	operator += (const vect2& v)	{ return vect2(this->x += v.x, this->y += v.y); }
 	inline vect2	operator -= (const vect2& v)	{ return vect2(this->x -= v.x, this->y -= v.y); }
-	inline double	operator *	(const vect2& v)	{ return this->x* v.x + this->y * v.y;			}
+	inline double	operator *	(const vect2& v)	{ return this->x * v.x + this->y * v.y;			}
 	inline vect2	operator *	(const double& s)	{ return vect2(this->x * s, this->y * s);		}
+	inline vect2	operator *=	(const double& s)	{ return vect2(this->x *= s, this->y *= s);		}
 	inline vect2	operator /	(const double& s)	{ return vect2(this->x / s, this->y / s);		}
+	inline vect2	operator /=	(const double& s)	{ return vect2(this->x /= s, this->y /= s);		}
 	
 	inline double len() { return sqrt(this->x * this->x + this->y * this->y); }
 	inline double lenSquared() { return this->x * this->x + this->y * this->y; }
@@ -148,5 +154,14 @@ struct edge
 		normal = (endP - startP).norm().rot(PI * 0.5);
 	}
 };
+
+
+struct triangle2
+{
+	screenCoord a;
+	screenCoord b;
+	screenCoord c;
+};
+
 
 

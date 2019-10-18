@@ -31,3 +31,25 @@ bool pointIsAroundLine(vect2 P, edge L)
 
 	return (sign(sA) != sign(sB)) ? true : false;
 }
+
+
+int GetYMax3(screenCoord* p)
+{
+	int yMax = p[0].y;
+	for (int i = 1; i < 3; i++)
+	{
+		if (p[i].y > yMax) { yMax = p[i].y; }
+	}
+	return yMax;
+}
+
+
+int GetYMin3(screenCoord* p)
+{
+	int yMin = p[0].y;
+	for (int i = 1; i < 3; i++)
+	{
+		if (p[i].y < yMin) { yMin = p[i].y; }
+	}
+	return yMin;
+}

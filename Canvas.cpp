@@ -3,31 +3,6 @@
 #include "Canvas.h"
 #include "Utilities.h"
 
-/*
-Canvas::Canvas()
-{
-	width			= 800;
-	height			= 600;
-
-	scale			= 1.0;
-
-	closed			= false;
-
-	clearColour		= 0;
-
-	pixelBuffer		= new Uint32[800 * 600];
-
-	SDL_Init(SDL_INIT_EVERYTHING);
-
-	window = SDL_CreateWindow("Untitled", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, 0);
-
-	screen = SDL_CreateRenderer(window, -1, 0);
-
-	texture = SDL_CreateTexture(screen, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, 800, 600);
-
-	SDL_ShowCursor(SDL_DISABLE);
-}
-*/
 
 Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& title)
 {
@@ -69,15 +44,6 @@ Canvas::~Canvas()
 	std::cout << "Canvas destroyed succesfully..." << std::endl;
 }
 
-/*
-void Canvas::setClearColour(	const unsigned char& a,
-								const unsigned char& r,
-								const unsigned char& g,
-								const unsigned char& b)
-{
-	clearColour = (a << 24) | (r << 16) | (g << 8) | (b << 0);
-}
-*/
 
 void Canvas::setClearColour(Uint32 col)
 {
@@ -100,6 +66,15 @@ void Canvas::update()
 	SDL_RenderCopy(screen, texture, nullptr, nullptr);
 
 	SDL_RenderPresent(screen);
+}
+
+
+void Canvas::putPixel(int x, int y, Uint32 colour)
+{
+	if (x >= 0 && x < width && y >= 0 && y < height)
+	{
+		pixelBuffer[y * width + x] = colour;
+	}
 }
 
 
@@ -295,6 +270,189 @@ void Canvas::drawCircle(const screenCoord& centreP, const int& radius, const Uin
 			if (pos <= (radius * radius))
 			{
 				pixelBuffer[j * width + i] = argbColour(0, brightness, brightness, 255);
+			}
+		}
+	}
+}
+
+
+
+void Canvas::renderTriangle(const triangle2& t, vect2 A, vect2 B, vect2 C, const double& scale, Texture* texture)
+{
+	screenCoord pt[3] = { t.a, t.b, t.c };
+	int yMin, yMax;
+	yMin = GetYMin3(pt);
+	yMax = GetYMax3(pt);
+
+	int wd = 0;
+	int dx, dy;
+	double xx, yy;
+	int lineEnd[2] = { 0, 0 };
+
+	int endIndex;
+	int startX, endX;
+
+	vect2 U = (C - B).norm();
+	vect2 V = (A - B).norm();
+	double uLength = (C - B).len();
+	double vLength = (A - B).len();
+
+	Uint32 finalPixel;
+
+	for (int hg = yMin; hg < yMax; hg++)
+	{
+		endIndex = 0;
+		//Side A-B:
+		if ((t.a.y <= hg && t.b.y > hg) || (t.b.y <= hg && t.a.y > hg))
+		{
+			dx = t.b.x - t.a.x; dy = t.b.y - t.a.y;
+			yy = (double)hg - (double)t.a.y; xx = dx * (yy / dy);
+			wd = t.a.x + (int)xx;
+			if (endIndex < 2)
+			{
+				lineEnd[endIndex++] = wd;
+			}
+		}
+		//Side B-C:
+		if ((t.b.y <= hg && t.c.y > hg) || (t.c.y <= hg && t.b.y > hg))
+		{
+			dx = t.c.x - t.b.x; dy = t.c.y - t.b.y;
+			yy = (double)hg - (double)t.b.y; xx = dx * (yy / dy);
+			wd = t.b.x + (int)xx;
+			if (endIndex < 2)
+			{
+				lineEnd[endIndex++] = wd;
+			}
+		}
+		//Side C-A:
+		if ((t.c.y <= hg && t.a.y > hg) || (t.a.y <= hg && t.c.y > hg))
+		{
+			dx = t.a.x - t.c.x; dy = t.a.y - t.c.y;
+			yy = (double)hg - (double)t.c.y; xx = dx * (yy / dy);
+			wd = t.c.x + (int)xx;
+			if (endIndex < 2)
+			{
+				lineEnd[endIndex++] = wd;
+			}
+		}
+		if (endIndex == 2)
+		{
+			if (lineEnd[0] <= lineEnd[1])
+			{
+				startX = lineEnd[0];
+				endX = lineEnd[1];
+			}
+			else
+			{
+				startX = lineEnd[1];
+				endX = lineEnd[0];
+			}
+			int span = abs(endX - startX + 1);
+
+			for (int i = startX; i < endX + 1; i++)
+			{
+				if ((i >= 0 && i < width) && (hg >= 0 && hg < height))
+				{
+					vect2 currentPoint((double)i / scale, (double)hg / scale);
+					
+					vect2 P = (currentPoint - B);
+					double uCoord = abs((P * U) / uLength);
+					double vCoord = abs((P * V) / vLength);
+
+					finalPixel = texture->getPixel(uCoord, vCoord);
+
+					pixelBuffer[hg * width + i] = finalPixel;
+				}
+			}
+		}
+	}
+}
+
+
+void Canvas::renderTriangle(vect2 a, vect2 b, vect2 c, vect2 u, vect2 v, double uLength, double vLength, const double& scale, Texture* texture)
+{
+	screenCoord pt[3] = { a.onScreen(scale), b.onScreen(scale), c.onScreen(scale) };
+	int yMin, yMax;
+	yMin = GetYMin3(pt);
+	yMax = GetYMax3(pt);
+
+	int wd = 0;
+	int dx, dy;
+	double xx, yy;
+	int lineEnd[2] = { 0, 0 };
+
+	int endIndex;
+	int startX, endX;
+
+	Uint32 finalPixel;
+
+	for (int hg = yMin; hg < yMax; hg++)
+	{
+		endIndex = 0;
+		//Side A-B:
+		if ((a.y <= hg && b.y > hg) || (b.y <= hg && a.y > hg))
+		{
+			dx = b.x - a.x; dy = b.y - a.y;
+			yy = (double)hg - (double)a.y; xx = dx * (yy / dy);
+			wd = a.x + (int)xx;
+			if (endIndex < 2)
+			{
+				lineEnd[endIndex++] = wd;
+			}
+		}
+		//Side B-C:
+		if ((b.y <= hg && c.y > hg) || (c.y <= hg && b.y > hg))
+		{
+			dx = c.x - b.x; dy = c.y - b.y;
+			yy = (double)hg - (double)b.y; xx = dx * (yy / dy);
+			wd = b.x + (int)xx;
+			if (endIndex < 2)
+			{
+				lineEnd[endIndex++] = wd;
+			}
+		}
+		//Side C-A:
+		if ((c.y <= hg && a.y > hg) || (a.y <= hg && c.y > hg))
+		{
+			dx = a.x - c.x; dy = a.y - c.y;
+			yy = (double)hg - (double)c.y; xx = dx * (yy / dy);
+			wd = c.x + (int)xx;
+			if (endIndex < 2)
+			{
+				lineEnd[endIndex++] = wd;
+			}
+		}
+		if (endIndex == 2)
+		{
+			if (lineEnd[0] <= lineEnd[1])
+			{
+				startX = lineEnd[0];
+				endX = lineEnd[1];
+			}
+			else
+			{
+				startX = lineEnd[1];
+				endX = lineEnd[0];
+			}
+			int span = abs(endX - startX + 1);
+
+			for (int i = startX; i < endX + 1; i++)
+			{
+				if ((i >= 0 && i < width) && (hg >= 0 && hg < height))
+				{
+					vect2 currentPoint((double)i / scale, (double)hg / scale);
+
+					vect2 p = (currentPoint - b);
+					double uCoord = abs((p * u) / uLength);
+					double vCoord = abs((p * v) / vLength);
+
+					finalPixel = texture->getPixel(uCoord, vCoord);
+
+					if (finalPixel != 0)
+					{
+						pixelBuffer[hg * width + i] = finalPixel;
+					}					
+				}
 			}
 		}
 	}
