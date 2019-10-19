@@ -3,6 +3,7 @@
 #include "Vehicle.h"
 
 
+
 Vehicle::Vehicle()
 {
 	width			= 20.0f;
@@ -62,7 +63,6 @@ void Vehicle::shoot(std::vector<Projectile>& bullets)
 void Vehicle::draw(Canvas* screen, Texture* texture)
 {
 	double scale = screen->getScale();
-	//screen->drawCircle(position.onScreen(scale), 25, 255);
 
 	triangle2 poly_1, poly_2;
 	
@@ -74,13 +74,57 @@ void Vehicle::draw(Canvas* screen, Texture* texture)
 	poly_2.b = botR.onScreen(scale);
 	poly_2.c = botL.onScreen(scale);
 
-	//vect2 u = (topR - topL).norm();
-	//vect2 v = (botL - topL).norm();
-	//
-	//screen->renderTriangle(botL, topL, topR, u, v, width, length, scale, texture);
-	//screen->renderTriangle(topR, botR, botL, u, v, width, length, scale, texture);
-
 	screen->renderTriangle(poly_1, botL, topL, topR, scale, texture);
 	screen->renderTriangle(poly_2, botL, topL, topR, scale, texture);
 
+
+
+	/***********************************************************
+	**********										  **********
+	***********************************************************/
+
+
+	int nP = 5;
+	double radius = 250.0f;
+	double inner_radius = 225.0f;
+	vect2 centre(1200.0f, 600.0f);
+	vect2* polyPoints = new vect2[nP];
+	screenCoord* points = new screenCoord[nP];
+	for (int i = 0; i < nP; i++)
+	{
+		vect2 temp(centre.x + radius * cos(2 * PI / nP * i), centre.y + radius * sin(2 * PI / nP * i));
+		points[i] = temp.onScreen(scale);
+		polyPoints[i] = temp;
+	}
+	
+
+	edge keel(position, position + this->getDirection());
+
+	screen->solidFillConvexPoly(nP, points, argbColour(0, 0, 255, 0));
+
+	if (screen->checkPolygonForSplitting(nP, polyPoints, keel))
+	{
+		for (int i = 0; i < nP; i++)
+		{
+			edge temp;
+			if (i < nP - 1)
+			{
+				temp.startP = polyPoints[i];
+				temp.endP	= polyPoints[i + 1];
+			}
+			else
+			{
+				temp.startP = polyPoints[i];
+				temp.endP	= polyPoints[0];
+			}
+			vect2 hit;
+			if (screen->iSect2dLine(temp.startP, temp.endP, keel, &hit))
+			{
+				screen->drawCircle(hit.onScreen(scale), 5, argbColour(0, 255, 0, 0));
+			}
+		}
+	}
+
+
+	delete[] points, polyPoints;
 }

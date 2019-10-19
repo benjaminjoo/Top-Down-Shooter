@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 #include "Canvas.h"
 #include "Utilities.h"
@@ -266,15 +268,92 @@ void Canvas::drawCircle(const screenCoord& centreP, const int& radius, const Uin
 		for (int i = bb.topLeft.x; i <= bb.bottomRight.x; i++)
 		{
 			int pos = (i - centreP.x) * (i - centreP.x) + (j - centreP.y) * (j - centreP.y);
-			int brightness = 255 - (int)((double)pos / ((double)radius * (double)radius) * 255);
-			if (pos <= (radius * radius))
+			if (pos < (radius * radius))
+				pixelBuffer[j * width + i] = colour;
+			//int brightness = 255 - (int)((double)pos / ((double)radius * (double)radius) * 255);
+			//if (pos <= (radius * radius))
+			//{
+			//	pixelBuffer[j * width + i] = argbColour(0, brightness, brightness, 255);
+			//}
+		}
+	}
+}
+
+
+void Canvas::solidFillTriangle(const screenCoord& a, const screenCoord& b, const screenCoord& c, const Uint32& colour)
+{
+	screenCoord pt[3] = { a, b, c };
+	int yMin = pt[0].y;
+	for (int i = 1; i < 3; i++) { if (pt[i].y < yMin) { yMin = pt[i].y; } }
+	int yMax = pt[0].y;
+	for (int i = 1; i < 3; i++) { if (pt[i].y > yMax) { yMax = pt[i].y; } }
+
+	int wd = 0;
+	int dx, dy;
+	int lineEnd[2] = { 0, 0 };
+	double xx, yy;
+	int endIndex;
+	int startX, endX;
+
+	for (int hg = yMin; hg < yMax; hg++)
+	{
+		endIndex = 0;
+		//Side A-B:
+		if ((a.y <= hg && b.y > hg) || (b.y <= hg && a.y > hg))
+		{
+			dx = b.x - a.x; dy = b.y -a.y;
+			yy = (double)hg - (double)a.y; xx = dx * (yy / dy);
+			wd = a.x + (int)xx;
+			if (endIndex < 2) { lineEnd[endIndex++] = wd; }
+		}
+		//Side B-C:
+		if ((b.y <= hg && c.y > hg) || (c.y <= hg && b.y > hg))
+		{
+			dx = c.x - b.x; dy = c.y - b.y;
+			yy = (double)hg - (double)b.y; xx = dx * (yy / dy);
+			wd = b.x + (int)xx;
+			if (endIndex < 2) { lineEnd[endIndex++] = wd; }
+		}
+		//Side C-A:
+		if ((c.y <= hg && a.y > hg) || (a.y <= hg && c.y > hg))
+		{
+			dx = a.x - c.x; dy = a.y - c.y;
+			yy = (double)hg - (double)c.y; xx = dx * (yy / dy);
+			wd = c.x + (int)xx;
+			if (endIndex < 2) { lineEnd[endIndex++] = wd; }
+		}
+		if (endIndex == 2)
+		{
+			if (lineEnd[0] <= lineEnd[1])
 			{
-				pixelBuffer[j * width + i] = argbColour(0, brightness, brightness, 255);
+				startX = lineEnd[0];
+				endX = lineEnd[1];
+			}
+			else
+			{
+				startX = lineEnd[1];
+				endX = lineEnd[0];
+			}
+			int span = abs(endX - startX + 1);
+			for (int i = startX; i < endX + 1; i++)
+			{
+				if ((i >= 0 && i < width) && (hg >= 0 && hg < height))
+				{
+					pixelBuffer[hg * width + i] = colour;
+				}
 			}
 		}
 	}
 }
 
+
+void Canvas::solidFillConvexPoly(unsigned int n, const screenCoord* P, const Uint32& colour)
+{
+	for (unsigned int i = 0; i < n - 2; i++)
+	{
+		this->solidFillTriangle(P[0], P[i + 1], P[i + 2], colour);
+	}
+}
 
 
 void Canvas::renderTriangle(const triangle2& t, vect2 A, vect2 B, vect2 C, const double& scale, Texture* texture)
@@ -454,6 +533,243 @@ void Canvas::renderTriangle(vect2 a, vect2 b, vect2 c, vect2 u, vect2 v, double 
 					}					
 				}
 			}
+		}
+	}
+}
+
+
+bool Canvas::checkPolygonForSplitting(int n, vect2* V, edge e)
+{
+	bool needsSplitting = false;
+	vect2 currentStart, currentEnd;
+	double sStart, sEnd;
+	vect2 P, Q;
+	for (int i = 0; i < n - 1; i++)
+	{
+		P.x = V[i].x;
+		P.y = V[i].y;
+		Q.x = V[i + 1].x;
+		Q.y = V[i + 1].y;
+		currentStart	= P - e.startP;
+		currentEnd		= Q - e.startP;
+		sStart	= currentStart	* e.normal;
+		sEnd	= currentEnd	* e.normal;
+		if (sign(sStart) && sign(sEnd))
+		{
+			if (sign(sStart) != sign(sEnd)) { needsSplitting = true; }
+		}
+	}
+	return needsSplitting;
+}
+
+
+bool Canvas::iSect2dLine(vect2 a, vect2 b, edge e, vect2* result)
+{
+	vect2 ap = a - e.startP;
+	vect2 bp = b - e.startP;
+
+	double sA = ap * e.normal;
+	double sB = bp * e.normal;
+
+	double t;
+
+	if (sign(sA) != sign(sB))
+	{
+		vect2 d = b - a;
+		double dist = d * e.normal;
+
+		if (sA < 0.0)
+		{
+			if (dist)
+			{
+				t = (dist - sB) / dist;
+
+				result->x = a.x + t * (b.x - a.x);
+				result->y = a.y + t * (b.y - a.y);
+			}
+		}
+		if (sB < 0.0)
+		{
+			if (dist)
+			{
+				t = (-dist - sA) / dist;
+
+				result->x = b.x - t * (a.x - b.x);
+				result->y = b.y - t * (a.y - b.y);
+			}
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+vect2 Canvas::iSect2dLine(vect2 a, vect2 b, edge e)
+{
+	vect2 temp;
+
+	vect2 ap = a - e.startP;
+	vect2 bp = b - e.startP;
+
+	double sA = ap * e.normal;
+	double sB = bp * e.normal;
+
+	double t;
+
+	if (sign(sA) != sign(sB))
+	{
+		vect2 d = b - a;
+		double dist = d * e.normal;
+
+		if (sA < 0.0)
+		{
+			if (dist)
+			{
+				t = (dist - sB) / dist;
+
+				temp.x = a.x + t * (b.x - a.x);
+				temp.y = a.y + t * (b.y - a.y);
+			}
+		}
+		if (sB < 0.0)
+		{
+			if (dist)
+			{
+				t = (-dist - sA) / dist;
+
+				temp.x = b.x - t * (a.x - b.x);
+				temp.y = b.y - t * (a.y - b.y);
+			}
+		}		
+	}
+	return temp;
+}
+
+
+void Canvas::splitPoly(polygon* polyPtr, edge e)
+{
+	laterality branch = LEFT;
+	unsigned int leftCount = 0, rightCount = 0;
+	vect2 edgeStart, edgeEnd, intersectionPoint;
+	if (polyPtr->leftChild == nullptr && polyPtr->rightChild == nullptr)		//If current polygon is childless
+	{
+		if (this->checkPolygonForSplitting(polyPtr->n, polyPtr->vertices, e))	//If polygon is split by current edge
+		{
+			polyPtr->leftChild				= new polygon;
+			polyPtr->leftChild->n			= 0;
+			polyPtr->leftChild->leftChild	= nullptr;
+			polyPtr->leftChild->rightChild	= nullptr;
+			std::cout << "Polygon is split into leftChild..." << std::endl;
+
+			polyPtr->rightChild				= new polygon;
+			polyPtr->rightChild->n			= 0;
+			polyPtr->rightChild->leftChild	= nullptr;
+			polyPtr->rightChild->rightChild = nullptr;
+			std::cout << "...and rightChild." << std::endl;
+
+			for (unsigned int i = 0; i < polyPtr->n; i++)
+			{
+				if (i < polyPtr->n - 1)
+				{
+					edgeStart	= polyPtr->vertices[i];
+					edgeEnd		= polyPtr->vertices[i + 1];
+				}
+				else
+				{
+					edgeStart	= polyPtr->vertices[i];
+					edgeEnd		= polyPtr->vertices[0];
+				}
+				if (iSect2dLine(edgeStart, edgeEnd, e, &intersectionPoint))
+				{
+					std::cout << "Edge is split..." << std::endl;
+					if (branch == LEFT)
+					{
+						polyPtr->leftChild->vertices[leftCount++]	= intersectionPoint;
+						polyPtr->leftChild->n++;
+						branch = RIGHT;
+						polyPtr->rightChild->vertices[rightCount++] = intersectionPoint;
+						polyPtr->rightChild->n++;
+						polyPtr->rightChild->vertices[rightCount++] = edgeEnd;
+						polyPtr->rightChild->n++;
+					}
+					else if (branch == RIGHT)
+					{
+						polyPtr->rightChild->vertices[rightCount++] = intersectionPoint;
+						polyPtr->rightChild->n++;
+						branch = LEFT;
+						polyPtr->leftChild->vertices[leftCount++]	= intersectionPoint;
+						polyPtr->leftChild->n++;
+						polyPtr->leftChild->vertices[leftCount++]	= edgeEnd;
+						polyPtr->leftChild->n++;
+					}
+				}
+				else
+				{
+					std::cout << "Edge doesn't need to be split..." << std::endl;
+					if (branch == LEFT)
+					{
+						polyPtr->leftChild->vertices[leftCount++]	= edgeEnd;
+						polyPtr->leftChild->n++;
+					}
+					else if (branch == RIGHT)
+					{
+						polyPtr->rightChild->vertices[rightCount++] = edgeEnd;
+						polyPtr->rightChild->n++;
+					}
+				}
+			}
+		}
+		else
+		{
+			std::cout << "Polygon doesn't need to be split..." << std::endl;
+		}
+	}
+	else if (polyPtr->leftChild != nullptr && polyPtr->rightChild != nullptr)
+	{
+		this->splitPoly(polyPtr->leftChild,		e);
+		this->splitPoly(polyPtr->rightChild,	e);
+	}
+}
+
+
+void Canvas::traversePolyTree(polygon* polyTree)
+{
+	if (polyTree->leftChild == nullptr && polyTree->rightChild == nullptr)
+	{	
+		polyTree->colour = (polygonBuffer.size() * 4) << 16;
+		polygonBuffer.push_back(*polyTree);
+	}
+	else if (polyTree->leftChild != nullptr && polyTree->rightChild != nullptr)
+	{
+		traversePolyTree(polyTree->leftChild);
+		traversePolyTree(polyTree->rightChild);
+	}
+}
+
+
+void Canvas::buildPolyTree(polygon* rootPolyPtr, const std::vector<edge>& edges)
+{
+	std::cout << "Started building BSP tree..." << std::endl;
+	std::cout << "Number of edges: " << edges.size() << std::endl;
+	for (auto i = edges.begin(); i != edges.end(); ++i)
+	{
+		this->splitPoly(rootPolyPtr, *i);
+	}
+	this->traversePolyTree(rootPolyPtr);
+}
+
+
+void Canvas::drawPolyTree()
+{
+	for (auto i = polygonBuffer.begin(); i != polygonBuffer.end(); ++i)
+	{
+		auto nPoly = i->n;
+		for (unsigned int p = 0; p < nPoly - 2; p++)
+		{
+			this->solidFillTriangle(i->vertices[0].onScreen(scale), i->vertices[p + 1].onScreen(scale), i->vertices[p + 2].onScreen(scale), i->colour);
 		}
 	}
 }

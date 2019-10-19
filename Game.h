@@ -39,6 +39,8 @@ public:
 	Game(World* L, Canvas* S, EventHandler* E, PlayerVehicle* P);
 	~Game();
 
+	void buildBSPTree();
+
 	void addEnemy(EnemyVehicle E);
 	void addBullet(Projectile P);
 	void addTexture(Texture T);

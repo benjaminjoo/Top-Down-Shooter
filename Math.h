@@ -3,12 +3,20 @@
 #include <SDL/SDL.h>
 #include <cmath>
 
-#define PI		3.141592654
+#define PI										3.141592654
 
-#define BULLET_DRAG							 0.99f
-#define BULLET_DIAMETER						5.0f
-#define BULLET_MUZZLE_VELOCITY				50.0f	
-#define BULLET_KINETIC_ENERGY_CUTOFF		 10.0f
+#define BULLET_DRAG								0.99f
+#define BULLET_DIAMETER							5.0f
+#define BULLET_MUZZLE_VELOCITY					100.0f	
+#define BULLET_KINETIC_ENERGY_CUTOFF			10.0f
+
+#define MAX_VERTICES							64
+
+enum laterality
+{
+	LEFT,
+	RIGHT
+};
 
 template <class T>
 void swap(T& a, T& b)
@@ -124,6 +132,16 @@ struct vect2
 	inline vect2 rot(const double& a) { return vect2(this->x * cos(a) - this->y * sin(a), this->y * cos(a) + this->x * sin(a)); }
 	inline screenCoord onScreen(const double& s) { return screenCoord( (int)(this->x * s), (int)(this->y * s)); }
 
+};
+
+
+struct polygon
+{
+	unsigned int	n;
+	vect2			vertices[MAX_VERTICES];
+	Uint32			colour;
+	polygon*		leftChild;
+	polygon*		rightChild;
 };
 
 

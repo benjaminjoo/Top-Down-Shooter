@@ -20,6 +20,26 @@ Game::~Game()
 }
 
 
+void Game::buildBSPTree()
+{
+	polygon rootPoly;
+
+	double w = (double)Screen->getWidth() / Screen->getScale();
+	double h = (double)Screen->getHeight() / Screen->getScale();
+
+	rootPoly.n				= 4;
+	rootPoly.vertices[0]	= vect2(0.0f, 0.0f);
+	rootPoly.vertices[1]	= vect2(w, 0.0f);
+	rootPoly.vertices[2]	= vect2(w, h);
+	rootPoly.vertices[3]	= vect2(0.0f, h);
+	rootPoly.colour			= 0;
+	rootPoly.leftChild		= nullptr;
+	rootPoly.rightChild		= nullptr;
+
+	Screen->buildPolyTree(&rootPoly, Level->edgeList);
+}
+
+
 void Game::addEnemy(EnemyVehicle E)
 {
 	Enemies.push_back(E);
@@ -113,6 +133,7 @@ void Game::updateAll()
 void Game::drawAll()
 {
 	Screen->clear();
+	Screen->drawPolyTree();
 	this->drawWorld();
 	this->drawPlayer();
 	this->drawEnemies();
