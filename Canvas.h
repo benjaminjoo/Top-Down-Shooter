@@ -17,6 +17,8 @@ private:
 
 	double					scale;
 
+	int						fontSize;
+
 	SDL_Window*				window;
 	SDL_Renderer*			screen;
 	SDL_Texture*			texture;
@@ -51,11 +53,14 @@ public:
 	void solidFillTriangle(const screenCoord& a, const screenCoord& b, const screenCoord& c, const Uint32& colour);
 	void solidFillConvexPoly(unsigned int n, const screenCoord* P, const Uint32& colour);
 	void renderTriangle(const triangle2& t, vect2 A, vect2 B, vect2 C, const double& scale, Texture* texture);
-	void renderTriangle(vect2 a, vect2 b, vect2 c, vect2 u, vect2 v, double uLength, double vLength, const double& scale, Texture* texture);
+
+
+	bool* GetSingleDigit_8(char letter_No);
+	void displayValue(double value, int dec, int shiftH, int shiftV, Uint32 col);
+
 
 	bool checkPolygonForSplitting(int n, vect2* V, edge e);
 	bool iSect2dLine(vect2 a, vect2 b, edge e, vect2* r);
-	vect2 iSect2dLine(vect2 a, vect2 b, edge e);
 	void splitPoly(polygon* polyPtr, edge e);
 	void buildPolyTree(polygon* rootPolyPtr, const std::vector<edge>& edges);
 	void traversePolyTree(polygon* polyTree);

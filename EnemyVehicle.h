@@ -8,6 +8,7 @@ private:
 
 	void updatePosition();
 	void actOnCollision();
+	vect2 getVelocity();
 
 public:
 	EnemyVehicle();

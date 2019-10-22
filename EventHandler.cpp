@@ -13,11 +13,13 @@ EventHandler::EventHandler(const double& turn_, const double& move_, const doubl
 	paused			= false;
 	firing			= false;
 
+	showStats		= true;
+
 	turn			= turn_;
 	move			= move_;
 	strafe			= strf_;
 
-	step_speed		= 1.0f;
+	step_speed		= 5.0f;
 	turn_speed		= 2.5f;
 
 	sensitivity		= sens_;
@@ -193,6 +195,12 @@ void EventHandler::HandleUserEvents()
 			{
 			case SDLK_ESCAPE:
 				running = false;
+				break;
+			case SDLK_TAB:
+				showStats = showStats ? false : true;
+				break;
+			case SDLK_p:
+				paused = paused ? false : true;
 				break;
 			default:
 				break;

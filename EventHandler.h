@@ -15,6 +15,8 @@ public:
 	bool paused;
 	bool firing;
 
+	bool showStats;
+
 	double turn;
 	double move;
 	double strafe;

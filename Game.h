@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <time.h>
 
 #include "World.h"
 #include "Canvas.h"
@@ -13,6 +14,11 @@
 class Game
 {
 private:
+
+	clock_t						oldTime;
+	clock_t						newTime;
+	clock_t						frameTime;
+	unsigned int				frameCount;
 
 	std::vector<EnemyVehicle>	Enemies;
 	std::vector<Projectile>		Bullets;
@@ -30,11 +36,12 @@ private:
 
 public:
 
-	World*						Level;
-	Canvas*						Screen;
-	EventHandler*				Controls;
-	PlayerVehicle*				Player;
+	World*			Level;
+	Canvas*			Screen;
+	EventHandler*	Controls;
+	PlayerVehicle*	Player;
 
+	unsigned int	nBullet;
 
 	Game(World* L, Canvas* S, EventHandler* E, PlayerVehicle* P);
 	~Game();
@@ -47,5 +54,8 @@ public:
 
 	void updateAll();
 	void drawAll();
-};
 
+	void updateFrameCount();
+	void calculateFrametime();
+
+};

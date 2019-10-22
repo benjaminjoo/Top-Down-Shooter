@@ -11,26 +11,25 @@ class Projectile
 {
 private:
 
+	int		ID;
+
 	vect2	position;
 	double	rotation;
 	vect2	velocity;
+	double	unitMove;
 	vect2	acceleration;
 
-	double	size;
+	double	diameter;
 	double  kineticEnergy;
-
-	void actOnCollision();
 
 public:
 
-	Projectile(const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& d);
+
+	Projectile(const int& id, const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& d);
 	~Projectile();
 
 	double getKineticEnergy();
-	void update();
-	void updateVelocity();
-	void updatePosition();
-	void checkForCollision(std::vector<edge> walls, Canvas* screen);
+	void update(std::vector<edge> walls, std::vector<Projectile> bullets, Canvas* screen);
 	void draw(Canvas* screen);
 };
 

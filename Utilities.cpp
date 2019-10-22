@@ -24,6 +24,12 @@ double distPoint2Line(vect2 P, edge L)
 }
 
 
+double distPoint2Point(vect2 A, vect2 B)
+{
+	return sqrt((A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y));
+}
+
+
 bool pointIsAroundLine(vect2 P, edge L)
 {
 	double sA = (L.endP - L.startP) * (L.startP - P);
@@ -52,4 +58,60 @@ int GetYMin3(screenCoord* p)
 		if (p[i].y < yMin) { yMin = p[i].y; }
 	}
 	return yMin;
+}
+
+
+double pow10(int n)
+{
+	double result = 1.0;
+	if (n > 0)
+		for (int i = 0; i < n; i++)
+			result *= 10;
+	else if (n < 0)
+		for (int i = 0; i > n; i--)
+			result /= 10;
+	return result;
+}
+
+
+std::shared_ptr<int[]> getFractionals(double number, int nDecimals)
+{
+	int dec;
+	if (number > 0)
+	{
+		dec = int((number - (int)(number)) * pow10(nDecimals));
+	}
+	else dec = 0;
+	std::shared_ptr<int[]> decimalDigits(new int[nDecimals]);
+	for (int i = 0; i < nDecimals; i++)
+	{
+		if (i < nDecimals)
+		{
+			decimalDigits[i] = (int)(dec / pow10(nDecimals - 1 - i));
+			int rem = dec % (int)(pow10(nDecimals - 1 - i));
+			dec = rem;
+		}
+	}
+	return decimalDigits;
+}
+
+
+std::shared_ptr<int[]> getIntegers(double number, int* n)
+{
+	int rawInt = (int)(number);
+	int nDigits = 0;
+	while (rawInt > 0)
+	{
+		rawInt /= 10;
+		nDigits++;
+	}
+	std::shared_ptr<int[]> intDigits(new int[nDigits]);
+	rawInt = (int)(number);
+	for (int i = nDigits - 1; i >= 0; i--)
+	{
+		intDigits[i] = rawInt % 10;
+		rawInt /= 10;
+	}
+	*n = nDigits;
+	return intDigits;
 }

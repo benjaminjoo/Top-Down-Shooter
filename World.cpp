@@ -26,7 +26,10 @@ void World::addEdge(const edge& e)
 
 void World::turnInsideOut()
 {
-
+	for (auto i = edgeList.begin(); i != edgeList.end(); ++i)
+	{
+		i->flip();
+	}
 }
 
 

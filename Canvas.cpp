@@ -4,6 +4,7 @@
 
 #include "Canvas.h"
 #include "Utilities.h"
+#include "Fonts.h"
 
 
 Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& title)
@@ -12,6 +13,8 @@ Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& t
 	height			= h;
 
 	scale			= s;
+
+	fontSize		= 8;
 
 	closed			= false;
 
@@ -268,13 +271,13 @@ void Canvas::drawCircle(const screenCoord& centreP, const int& radius, const Uin
 		for (int i = bb.topLeft.x; i <= bb.bottomRight.x; i++)
 		{
 			int pos = (i - centreP.x) * (i - centreP.x) + (j - centreP.y) * (j - centreP.y);
-			if (pos < (radius * radius))
-				pixelBuffer[j * width + i] = colour;
-			//int brightness = 255 - (int)((double)pos / ((double)radius * (double)radius) * 255);
-			//if (pos <= (radius * radius))
-			//{
-			//	pixelBuffer[j * width + i] = argbColour(0, brightness, brightness, 255);
-			//}
+			//if (pos < (radius * radius))
+			//	pixelBuffer[j * width + i] = colour;
+			int brightness = 255 - (int)((double)pos / ((double)radius * (double)radius) * 255);
+			if (pos <= (radius * radius))
+			{
+				pixelBuffer[j * width + i] = argbColour(0, brightness, brightness, 255);
+			}
 		}
 	}
 }
@@ -440,7 +443,10 @@ void Canvas::renderTriangle(const triangle2& t, vect2 A, vect2 B, vect2 C, const
 
 					finalPixel = texture->getPixel(uCoord, vCoord);
 
-					pixelBuffer[hg * width + i] = finalPixel;
+					if (finalPixel)
+					{
+						pixelBuffer[hg * width + i] = finalPixel;
+					}				
 				}
 			}
 		}
@@ -448,89 +454,295 @@ void Canvas::renderTriangle(const triangle2& t, vect2 A, vect2 B, vect2 C, const
 }
 
 
-void Canvas::renderTriangle(vect2 a, vect2 b, vect2 c, vect2 u, vect2 v, double uLength, double vLength, const double& scale, Texture* texture)
+bool* Canvas::GetSingleDigit_8(char letter_No)
 {
-	screenCoord pt[3] = { a.onScreen(scale), b.onScreen(scale), c.onScreen(scale) };
-	int yMin, yMax;
-	yMin = GetYMin3(pt);
-	yMax = GetYMax3(pt);
+	bool* currentLetter;
 
-	int wd = 0;
-	int dx, dy;
-	double xx, yy;
-	int lineEnd[2] = { 0, 0 };
-
-	int endIndex;
-	int startX, endX;
-
-	Uint32 finalPixel;
-
-	for (int hg = yMin; hg < yMax; hg++)
+	switch (letter_No)
 	{
-		endIndex = 0;
-		//Side A-B:
-		if ((a.y <= hg && b.y > hg) || (b.y <= hg && a.y > hg))
-		{
-			dx = b.x - a.x; dy = b.y - a.y;
-			yy = (double)hg - (double)a.y; xx = dx * (yy / dy);
-			wd = a.x + (int)xx;
-			if (endIndex < 2)
-			{
-				lineEnd[endIndex++] = wd;
-			}
-		}
-		//Side B-C:
-		if ((b.y <= hg && c.y > hg) || (c.y <= hg && b.y > hg))
-		{
-			dx = c.x - b.x; dy = c.y - b.y;
-			yy = (double)hg - (double)b.y; xx = dx * (yy / dy);
-			wd = b.x + (int)xx;
-			if (endIndex < 2)
-			{
-				lineEnd[endIndex++] = wd;
-			}
-		}
-		//Side C-A:
-		if ((c.y <= hg && a.y > hg) || (a.y <= hg && c.y > hg))
-		{
-			dx = a.x - c.x; dy = a.y - c.y;
-			yy = (double)hg - (double)c.y; xx = dx * (yy / dy);
-			wd = c.x + (int)xx;
-			if (endIndex < 2)
-			{
-				lineEnd[endIndex++] = wd;
-			}
-		}
-		if (endIndex == 2)
-		{
-			if (lineEnd[0] <= lineEnd[1])
-			{
-				startX = lineEnd[0];
-				endX = lineEnd[1];
-			}
-			else
-			{
-				startX = lineEnd[1];
-				endX = lineEnd[0];
-			}
-			int span = abs(endX - startX + 1);
+	case 0:
+	case '0':
+		currentLetter = number_0;
+		break;
+	case 1:
+	case '1':
+		currentLetter = number_1;
+		break;
+	case 2:
+	case '2':
+		currentLetter = number_2;
+		break;
+	case 3:
+	case '3':
+		currentLetter = number_3;
+		break;
+	case 4:
+	case '4':
+		currentLetter = number_4;
+		break;
+	case 5:
+	case '5':
+		currentLetter = number_5;
+		break;
+	case 6:
+	case '6':
+		currentLetter = number_6;
+		break;
+	case 7:
+	case '7':
+		currentLetter = number_7;
+		break;
+	case 8:
+	case '8':
+		currentLetter = number_8;
+		break;
+	case 9:
+	case '9':
+		currentLetter = number_9;
+		break;
+	case '.':
+		currentLetter = decimal_p;
+		break;
+	case '%':
+		currentLetter = percent_;
+		break;
+	case 'a':
+		currentLetter = letter_a;
+		break;
+	case 'A':
+		currentLetter = letter_A;
+		break;
+	case 'b':
+		currentLetter = letter_b;
+		break;
+	case 'B':
+		currentLetter = letter_B;
+		break;
+	case 'c':
+		currentLetter = letter_c;
+		break;
+	case 'C':
+		currentLetter = letter_C;
+		break;
+	case 'd':
+		currentLetter = letter_d;
+		break;
+	case 'D':
+		currentLetter = letter_D;
+		break;
+	case 'e':
+		currentLetter = letter_e;
+		break;
+	case 'E':
+		currentLetter = letter_E;
+		break;
+	case 'f':
+		currentLetter = letter_f;
+		break;
+	case 'F':
+		currentLetter = letter_F;
+		break;
+	case 'g':
+		currentLetter = letter_g;
+		break;
+	case 'G':
+		currentLetter = letter_G;
+		break;
+	case 'h':
+		currentLetter = letter_h;
+		break;
+	case 'H':
+		currentLetter = letter_H;
+		break;
+	case 'i':
+		currentLetter = letter_i;
+		break;
+	case 'I':
+		currentLetter = letter_I;
+		break;
+	case 'j':
+		currentLetter = letter_j;
+		break;
+	case 'J':
+		currentLetter = letter_J;
+		break;
+	case 'k':
+		currentLetter = letter_k;
+		break;
+	case 'K':
+		currentLetter = letter_K;
+		break;
+	case 'l':
+		currentLetter = letter_l;
+		break;
+	case 'L':
+		currentLetter = letter_L;
+		break;
+	case 'm':
+		currentLetter = letter_m;
+		break;
+	case 'M':
+		currentLetter = letter_M;
+		break;
+	case 'n':
+		currentLetter = letter_n;
+		break;
+	case 'N':
+		currentLetter = letter_N;
+		break;
+	case 'o':
+		currentLetter = letter_o;
+		break;
+	case 'O':
+		currentLetter = letter_O;
+		break;
+	case 'p':
+		currentLetter = letter_p;
+		break;
+	case 'P':
+		currentLetter = letter_P;
+		break;
+	case 'q':
+		currentLetter = letter_q;
+		break;
+	case 'Q':
+		currentLetter = letter_Q;
+		break;
+	case 'r':
+		currentLetter = letter_r;
+		break;
+	case 'R':
+		currentLetter = letter_R;
+		break;
+	case 's':
+		currentLetter = letter_s;
+		break;
+	case 'S':
+		currentLetter = letter_S;
+		break;
+	case 't':
+		currentLetter = letter_t;
+		break;
+	case 'T':
+		currentLetter = letter_T;
+		break;
+	case 'u':
+		currentLetter = letter_u;
+		break;
+	case 'U':
+		currentLetter = letter_U;
+		break;
+	case 'v':
+		currentLetter = letter_v;
+		break;
+	case 'V':
+		currentLetter = letter_V;
+		break;
+	case 'w':
+		currentLetter = letter_w;
+		break;
+	case 'W':
+		currentLetter = letter_W;
+		break;
+	case 'x':
+		currentLetter = letter_x;
+		break;
+	case 'X':
+		currentLetter = letter_X;
+		break;
+	case 'y':
+		currentLetter = letter_y;
+		break;
+	case 'Y':
+		currentLetter = letter_Y;
+		break;
+	case 'z':
+		currentLetter = letter_z;
+		break;
+	case 'Z':
+		currentLetter = letter_Z;
+		break;
+	default:
+		currentLetter = letter__;
+		break;
+	}
 
-			for (int i = startX; i < endX + 1; i++)
+	return currentLetter;
+}
+
+
+void Canvas::displayValue(double value, int dec, int shiftH, int shiftV, Uint32 colour)
+{
+	bool isSigned;
+	isSigned = value >= 0.0 ? false : true;
+	if (value < 0.0) { value = -value; }
+	std::shared_ptr<int[]> fract = getFractionals(value, dec);
+	int nInt = 0;
+	std::shared_ptr<int[]> dInt = getIntegers(value, &nInt);
+
+	int posH = width - 1 - (dec + 1 + shiftH) * fontSize;
+	int posV = height - fontSize * shiftV;
+
+	for (int p = 0; p < dec; p++)
+	{
+		bool* currentMap = this->GetSingleDigit_8((char)(fract[p]));
+		for (int j = 0; j < fontSize; j++)
+		{
+			for (int i = 0; i < fontSize; i++)
 			{
-				if ((i >= 0 && i < width) && (hg >= 0 && hg < height))
+				if (currentMap[j * fontSize + i])
 				{
-					vect2 currentPoint((double)i / scale, (double)hg / scale);
+					pixelBuffer[(posV + j) * width + posH + i] = colour;
+				}
+			}
+		}
+		posH += fontSize;
+	}
 
-					vect2 p = (currentPoint - b);
-					double uCoord = abs((p * u) / uLength);
-					double vCoord = abs((p * v) / vLength);
+	posH = width - 1 - (dec + nInt + 2 + shiftH) * fontSize;
 
-					finalPixel = texture->getPixel(uCoord, vCoord);
+	for (int p = 0; p < nInt; p++)
+	{
+		bool* currentMap = this->GetSingleDigit_8((char)(dInt[p]));
+		for (int j = 0; j < fontSize; j++)
+		{
+			for (int i = 0; i < fontSize; i++)
+			{
+				if (currentMap[j * fontSize + i])
+				{
+					pixelBuffer[(posV + j) * width + posH + i] = colour;
+				}
+			}
+		}
+		posH += fontSize;
+	}
 
-					if (finalPixel != 0)
-					{
-						pixelBuffer[hg * width + i] = finalPixel;
-					}					
+	posH = width - 1 - (dec + 2 + shiftH) * fontSize;
+
+	bool* currentMap = this->GetSingleDigit_8('.');
+	for (int j = 0; j < fontSize; j++)
+	{
+		for (int i = 0; i < fontSize; i++)
+		{
+			if (currentMap[j * fontSize + i])
+			{
+				pixelBuffer[(posV + j) * width + posH + i] = colour;
+			}
+		}
+	}
+
+	posH = width - 1 - (dec + nInt + 3 + shiftH) * fontSize;
+
+	if (isSigned)
+	{
+		bool* currentMap = minus_sign;
+		for (int j = 0; j < fontSize; j++)
+		{
+			for (int i = 0; i < fontSize; i++)
+			{
+				if (currentMap[j * fontSize + i])
+				{
+					pixelBuffer[(posV + j) * width + posH + i] = colour;
 				}
 			}
 		}
@@ -607,48 +819,6 @@ bool Canvas::iSect2dLine(vect2 a, vect2 b, edge e, vect2* result)
 }
 
 
-vect2 Canvas::iSect2dLine(vect2 a, vect2 b, edge e)
-{
-	vect2 temp;
-
-	vect2 ap = a - e.startP;
-	vect2 bp = b - e.startP;
-
-	double sA = ap * e.normal;
-	double sB = bp * e.normal;
-
-	double t;
-
-	if (sign(sA) != sign(sB))
-	{
-		vect2 d = b - a;
-		double dist = d * e.normal;
-
-		if (sA < 0.0)
-		{
-			if (dist)
-			{
-				t = (dist - sB) / dist;
-
-				temp.x = a.x + t * (b.x - a.x);
-				temp.y = a.y + t * (b.y - a.y);
-			}
-		}
-		if (sB < 0.0)
-		{
-			if (dist)
-			{
-				t = (-dist - sA) / dist;
-
-				temp.x = b.x - t * (a.x - b.x);
-				temp.y = b.y - t * (a.y - b.y);
-			}
-		}		
-	}
-	return temp;
-}
-
-
 void Canvas::splitPoly(polygon* polyPtr, edge e)
 {
 	laterality branch = LEFT;
@@ -662,13 +832,13 @@ void Canvas::splitPoly(polygon* polyPtr, edge e)
 			polyPtr->leftChild->n			= 0;
 			polyPtr->leftChild->leftChild	= nullptr;
 			polyPtr->leftChild->rightChild	= nullptr;
-			std::cout << "Polygon is split into leftChild..." << std::endl;
+			//std::cout << "Polygon is split into leftChild..." << std::endl;
 
 			polyPtr->rightChild				= new polygon;
 			polyPtr->rightChild->n			= 0;
 			polyPtr->rightChild->leftChild	= nullptr;
 			polyPtr->rightChild->rightChild = nullptr;
-			std::cout << "...and rightChild." << std::endl;
+			//std::cout << "...and rightChild." << std::endl;
 
 			for (unsigned int i = 0; i < polyPtr->n; i++)
 			{
@@ -684,7 +854,7 @@ void Canvas::splitPoly(polygon* polyPtr, edge e)
 				}
 				if (iSect2dLine(edgeStart, edgeEnd, e, &intersectionPoint))
 				{
-					std::cout << "Edge is split..." << std::endl;
+					//std::cout << "Edge is split..." << std::endl;
 					if (branch == LEFT)
 					{
 						polyPtr->leftChild->vertices[leftCount++]	= intersectionPoint;
@@ -708,7 +878,7 @@ void Canvas::splitPoly(polygon* polyPtr, edge e)
 				}
 				else
 				{
-					std::cout << "Edge doesn't need to be split..." << std::endl;
+					//std::cout << "Edge doesn't need to be split..." << std::endl;
 					if (branch == LEFT)
 					{
 						polyPtr->leftChild->vertices[leftCount++]	= edgeEnd;
@@ -721,10 +891,6 @@ void Canvas::splitPoly(polygon* polyPtr, edge e)
 					}
 				}
 			}
-		}
-		else
-		{
-			std::cout << "Polygon doesn't need to be split..." << std::endl;
 		}
 	}
 	else if (polyPtr->leftChild != nullptr && polyPtr->rightChild != nullptr)
@@ -739,7 +905,8 @@ void Canvas::traversePolyTree(polygon* polyTree)
 {
 	if (polyTree->leftChild == nullptr && polyTree->rightChild == nullptr)
 	{	
-		polyTree->colour = (polygonBuffer.size() * 4) << 16;
+		//polyTree->colour = (polygonBuffer.size() * 4) << 16;
+		polyTree->colour = (polygonBuffer.size() * 4);
 		polygonBuffer.push_back(*polyTree);
 	}
 	else if (polyTree->leftChild != nullptr && polyTree->rightChild != nullptr)

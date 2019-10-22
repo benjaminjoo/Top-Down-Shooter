@@ -10,6 +10,13 @@ Game::Game(World* L, Canvas* S, EventHandler* E, PlayerVehicle* P)
 	Controls	= E;
 	Player		= P;
 
+	oldTime		= 0;
+	newTime		= 0;
+	frameTime	= 0;
+	frameCount	= 0;
+
+	nBullet		= 0;
+
 	std::cout << "Game created sussecfully..." << std::endl;
 }
 
@@ -49,6 +56,7 @@ void Game::addEnemy(EnemyVehicle E)
 void Game::addBullet(Projectile P)
 {
 	Bullets.push_back(P);
+	nBullet++;
 }
 
 
@@ -67,6 +75,7 @@ void Game::updateWorld()
 void Game::updatePlayer()
 {
 	Player->update(Controls, Bullets);
+	Player->handleCollision(Controls, Level->edgeList);
 }
 
 
@@ -83,8 +92,8 @@ void Game::updateBullets()
 {
 	for (auto i = Bullets.begin(); i != Bullets.end(); ++i)
 	{
-		i->update();
-		i->checkForCollision(Level->edgeList, Screen);
+		i->update(Level->edgeList, Bullets, Screen);
+		//i->checkForCollision(Level->edgeList, Bullets, Screen);
 	}
 }
 
@@ -122,10 +131,13 @@ void Game::drawBullets()
 void Game::updateAll()
 {
 	Controls->HandleUserEvents();
-	this->updateWorld();
-	this->updatePlayer();
-	this->updateEnemies();
-	this->updateBullets();
+	if (!Controls->paused)
+	{
+		this->updateWorld();
+		this->updatePlayer();
+		this->updateEnemies();
+		this->updateBullets();
+	}	
 	Controls->ceaseMotion();
 }
 
@@ -138,5 +150,24 @@ void Game::drawAll()
 	this->drawPlayer();
 	this->drawEnemies();
 	this->drawBullets();
+	if (Controls->showStats) { Screen->displayValue((double)(30000.0 / frameTime), 1, 10, 10, 255); }
 	Screen->update();
+}
+
+
+void Game::updateFrameCount()
+{
+	frameCount++;
+}
+
+
+void Game::calculateFrametime()
+{
+	if (frameCount == 30)
+	{
+		oldTime = newTime;
+		newTime = clock();
+		frameTime = newTime - oldTime;
+		frameCount = 0;
+	}
 }

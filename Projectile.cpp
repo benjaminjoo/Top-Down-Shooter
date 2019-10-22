@@ -3,15 +3,20 @@
 #include "Projectile.h"
 
 
-Projectile::Projectile(const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& d)
+Projectile::Projectile(const int& id, const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& d)
 {
+	ID				= id;
+
 	position		= pos;
 	rotation		= rot;
 	velocity		= vel;
 	acceleration	= acc;
 
-	size			= d;
+	diameter		= d;
+
+	unitMove		= 2.0f;
 	kineticEnergy	= this->getKineticEnergy();
+	
 }
 
 
@@ -21,56 +26,100 @@ Projectile::~Projectile()
 }
 
 
-void Projectile::updateVelocity()
-{
-	velocity *= BULLET_DRAG;
-}
-
-
-void Projectile::updatePosition()
-{
-	position += velocity;
-}
-
-
-void Projectile::checkForCollision(std::vector<edge> walls, Canvas* screen)
-{
-	for (auto i = walls.begin(); i != walls.end(); ++i)
-	{
-		double distanceToWall = abs(distPoint2Line(position, *i));
-		bool wallIsRelevant = pointIsAroundLine(position, *i);
-		double velocityProjectedToWallNormal = abs(velocity * i->normal);
-		if (wallIsRelevant && (distanceToWall <= velocityProjectedToWallNormal))
-		{
-			velocity -= (i->normal * (2 * (velocity * i->normal)));
-		}
-	}
-}
-
-
-void Projectile::actOnCollision()
-{
-
-}
-
-
 double Projectile::getKineticEnergy()
 {
-	return 0.5f * size * velocity.lenSquared();
+	return 0.5f * diameter* velocity.lenSquared();
 }
 
 
 void Projectile::draw(Canvas* screen)
 {
-	if (getKineticEnergy() >= BULLET_KINETIC_ENERGY_CUTOFF)
-	{
-		screen->drawCircle(position.onScreen(screen->getScale()), (int)(BULLET_DIAMETER * 0.5f), 255);
-	}	
+	screen->drawCircle(position.onScreen(screen->getScale()), (int)(diameter * 0.5f), 255);
 }
 
-
-void Projectile::update()
+/*
+void Projectile::update(std::vector<edge> walls, std::vector<Projectile> bullets, Canvas* screen)
 {
-	this->updateVelocity();
-	this->updatePosition();
+	//vect2 v = this->velocity;
+
+	int nCycles = (int)(velocity.len() / unitMove) + 1;
+	vect2 v = velocity * (1.0f / nCycles);
+
+	vect2* speed = &v;
+
+	vect2 oldPos = position;
+	vect2 newPos = position + *speed;
+
+	vect2 change;
+
+	for (auto i = walls.begin(); i != walls.end(); ++i)
+	{
+		double oldDistWall = distPoint2Line(oldPos, *i);
+		double newDistWall = distPoint2Line(newPos, *i);
+
+		bool wallIsRelevant = pointIsAroundLine(position, *i);
+
+		bool bulletFacingWall = *speed * i->normal < 0.0f ? true : false;
+
+		if (abs(newDistWall) <= diameter && wallIsRelevant && bulletFacingWall)
+		{
+			double x = abs(oldDistWall) - diameter;
+			double speedProjectedToWallNormal = abs(*speed * i->normal);
+			double percentage = x / speedProjectedToWallNormal;
+
+			change += *speed * percentage;
+
+			position += change;
+
+			vect2 remainder = *speed * (1.0f - percentage);
+
+			vect2 bounceBack = remainder - (i->normal * 2.0f * (remainder * i->normal));
+
+			position += bounceBack;
+
+			*speed = *speed - (i->normal * 2.0f * (*speed * i->normal));
+		}
+	}
+
+	position += *speed;
+}
+*/
+
+void Projectile::update(std::vector<edge> walls, std::vector<Projectile> bullets, Canvas* screen)
+{
+	vect2 oldPos = position;
+	vect2 newPos = position + velocity;
+
+	vect2 change;
+
+	for (auto i = walls.begin(); i != walls.end(); ++i)
+	{
+		double oldDistWall = distPoint2Line(oldPos, *i);
+		double newDistWall = distPoint2Line(newPos, *i);
+
+		bool wallIsRelevant = pointIsAroundLine(position, *i);
+
+		bool bulletFacingWall = velocity * i->normal < 0.0f ? true : false;
+
+		if (abs(newDistWall) <= diameter && wallIsRelevant && bulletFacingWall)
+		{
+			double x = abs(oldDistWall) - diameter;
+			double velocityProjectedToWallNormal = abs(velocity * i->normal);
+			double percentage = x / velocityProjectedToWallNormal;
+
+			change += velocity * percentage;
+
+			position += change;
+
+			vect2 remainder = velocity * (1.0f - percentage);
+
+			vect2 bounceBack = remainder - (i->normal * 2.0f * (remainder * i->normal));
+
+			position += bounceBack;
+
+			velocity = velocity - (i->normal * 2.0f * (velocity * i->normal));
+		}
+	}
+
+	position += velocity;
 }

@@ -6,8 +6,8 @@
 #define PI										3.141592654
 
 #define BULLET_DRAG								0.99f
-#define BULLET_DIAMETER							5.0f
-#define BULLET_MUZZLE_VELOCITY					100.0f	
+#define BULLET_DIAMETER							12.5f
+#define BULLET_MUZZLE_VELOCITY					25.0f	
 #define BULLET_KINETIC_ENERGY_CUTOFF			10.0f
 
 #define MAX_VERTICES							64
@@ -137,11 +137,11 @@ struct vect2
 
 struct polygon
 {
-	unsigned int	n;
-	vect2			vertices[MAX_VERTICES];
-	Uint32			colour;
-	polygon*		leftChild;
-	polygon*		rightChild;
+	unsigned int	n						= 0;
+	vect2			vertices[MAX_VERTICES]	= { vect2(0.0f, 0.0f) };
+	Uint32			colour					= 0;
+	polygon*		leftChild				= nullptr;
+	polygon*		rightChild				= nullptr;
 };
 
 
@@ -168,8 +168,9 @@ struct edge
 
 	void flip()
 	{
-		swap(startP, endP);
-		normal = (endP - startP).norm().rot(PI * 0.5);
+		//swap(startP, endP);
+		//normal = (endP - startP).norm().rot(PI * 0.5);
+		normal *= -1.0f;
 	}
 };
 

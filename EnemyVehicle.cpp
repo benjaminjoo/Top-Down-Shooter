@@ -40,6 +40,12 @@ void EnemyVehicle::actOnCollision()
 }
 
 
+vect2 EnemyVehicle::getVelocity()
+{
+	return vect2(0.0f, 0.0f);
+}
+
+
 void EnemyVehicle::update()
 {
 

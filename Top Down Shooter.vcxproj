@@ -163,6 +163,7 @@
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="EnemyVehicle.h" />
     <ClInclude Include="EventHandler.h" />
+    <ClInclude Include="Fonts.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="PlayerVehicle.h" />

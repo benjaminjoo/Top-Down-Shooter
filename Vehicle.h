@@ -13,6 +13,7 @@ protected:
 	double	width;
 	double	length;
 	double	health;
+	double	bbRadius;
 
 	vect2	position;
 	double	rotation;
@@ -31,13 +32,15 @@ public:
 
 	virtual void updatePosition()	= 0;
 	virtual void actOnCollision()	= 0;
-	//virtual void draw(Canvas*)		= 0;
+	//virtual vect2 getVelocity()		= 0;
 
 	int getTextureID();
-	void getRectangle();
+	void getRectangle(vect2 offset);
 	vect2 getDirection();
-	void checkForCollision();
+	
+	//void checkForCollision();
 	void shoot(std::vector<Projectile>& bullets);
+	//void checkForCollision(std::vector<edge> walls, Canvas* screen);
 	void draw(Canvas* screen, Texture* texture);
 };
 
