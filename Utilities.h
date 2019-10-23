@@ -25,6 +25,9 @@ int GetYMax3(screenCoord* p);
 int GetYMin3(screenCoord* p);
 
 
+int power(int number, unsigned int p);
+
+
 double pow10(int n);
 
 

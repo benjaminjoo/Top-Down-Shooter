@@ -160,6 +160,7 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BSPTree.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="EnemyVehicle.h" />
     <ClInclude Include="EventHandler.h" />

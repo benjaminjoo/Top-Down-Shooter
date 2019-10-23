@@ -16,11 +16,70 @@
 #include "Math.h"
 #include "Utilities.h"
 #include "Texture.h"
+#include "BSPTree.h"
+
+
+void physics();
+void bspTree();
 
 
 int main(int argc, char** argv)
 {
 
+	//physics();
+	bspTree();
+
+
+
+	return 0;
+}
+
+
+void bspTree()
+{
+	Canvas Screen(1024, 600, 0.5f, "BSP Tree Visualisation");
+	Screen.setClearColour(argbColour(0, 0, 0, 255));
+
+	EventHandler Controls;
+
+	//Tree test_tree(&Screen, 10);
+	//
+	//test_tree.add2Tree(20);
+	//test_tree.add2Tree(25);
+	//test_tree.add2Tree(5);
+	//test_tree.add2Tree(15);
+	//test_tree.add2Tree(30);
+	//test_tree.add2Tree(40);
+	//test_tree.add2Tree(18);
+	//test_tree.add2Tree(14);
+	//test_tree.add2Tree(8);
+	//test_tree.add2Tree(2);
+
+	Tree test_tree(&Screen, 40);
+
+	srand(time(NULL));
+	unsigned int n = 20;
+	for (unsigned int i = 0; i < n; i++)
+	{
+		test_tree.add2Tree(rand() % 79 + 1);
+	}
+
+
+	while (Controls.isRunning())
+	{
+		Screen.clear();
+
+		test_tree.drawTree();
+
+		Controls.HandleUserEvents();
+
+		Screen.update();
+	}
+}
+
+
+void physics()
+{
 	World Space("The Final Frontier");
 	Canvas Screen(1200, 600, 0.5f, "Untitled");
 	EventHandler Controls(0.0f, 0.0f, 0.0f, 1.0f);
@@ -115,16 +174,13 @@ int main(int argc, char** argv)
 	while (Shooter.Controls->isRunning())
 	{
 		Shooter.calculateFrametime();
-	
+
+
 		Shooter.drawAll();
 		Shooter.updateAll();
-		
 
-		
+
+
 		Shooter.updateFrameCount();
 	}
-
-
-
-	return 0;
 }

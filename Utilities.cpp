@@ -61,6 +61,17 @@ int GetYMin3(screenCoord* p)
 }
 
 
+int power(int number, unsigned int p)
+{
+	int result = 1;
+	for (unsigned int i = 0; i < p; i++)
+	{
+		result *= number;
+	}
+	return result;
+}
+
+
 double pow10(int n)
 {
 	double result = 1.0;

@@ -26,6 +26,7 @@ public:
 
 	double sensitivity;
 
+	EventHandler();
 	EventHandler(const double& turn_, const double& move_, const double& strf_, const double& sens_);
 	~EventHandler();
 

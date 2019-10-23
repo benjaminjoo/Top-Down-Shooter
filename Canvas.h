@@ -56,7 +56,8 @@ public:
 
 
 	bool* GetSingleDigit_8(char letter_No);
-	void displayValue(double value, int dec, int shiftH, int shiftV, Uint32 col);
+	void displayValue(double value, int dec, int shiftH, int shiftV, Uint32 colour);
+	void displayInt(int value, int font_size, int xPos, int yPos, Uint32 colour, bool border, int thck);
 
 
 	bool checkPolygonForSplitting(int n, vect2* V, edge e);

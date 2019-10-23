@@ -750,6 +750,46 @@ void Canvas::displayValue(double value, int dec, int shiftH, int shiftV, Uint32 
 }
 
 
+void Canvas::displayInt(int value, int font_size, int xPos, int yPos, Uint32 colour, bool border, int thck)
+{
+	int nInt = 0;
+	std::shared_ptr<int[]> dInt = getIntegers(value, &nInt);
+
+	int posH = xPos - (int)((double)(font_size * nInt) * 0.5f);
+	int posV = yPos - (int)((double)font_size * 0.5f);
+
+	for (int p = 0; p < nInt; p++)
+	{
+		bool* currentMap = this->GetSingleDigit_8((char)(dInt[p]));
+		for (int j = 0; j < font_size; j++)
+		{
+			for (int i = 0; i < font_size; i++)
+			{
+				if (currentMap[j * font_size + i])
+				{
+					if(posV + j >= 0 && posV + j < height && posH + i >= 0 && posH + i < width)
+						pixelBuffer[(posV + j) * width + posH + i] = colour;
+				}
+			}
+		}
+		posH += font_size;
+	}
+
+	if (border)
+	{
+		int topLeftX = xPos - (int)((double)(font_size * nInt) * 0.5f) - thck;
+		int topLeftY = yPos - (int)((double)font_size * 0.5f) - thck;
+		int bottomRightX = xPos + (int)((double)(font_size * nInt) * 0.5f) + thck;
+		int bottomRightY = yPos + (int)((double)font_size * 0.5f) + thck;
+
+		this->drawLine(screenCoord(topLeftX, topLeftY),		screenCoord(bottomRightX, topLeftY),		colour);
+		this->drawLine(screenCoord(topLeftX, bottomRightY), screenCoord(bottomRightX, bottomRightY),	colour);
+		this->drawLine(screenCoord(topLeftX, topLeftY),		screenCoord(topLeftX, bottomRightY),		colour);
+		this->drawLine(screenCoord(bottomRightX, topLeftY), screenCoord(bottomRightX, bottomRightY),	colour);
+	}
+}
+
+
 bool Canvas::checkPolygonForSplitting(int n, vect2* V, edge e)
 {
 	bool needsSplitting = false;
