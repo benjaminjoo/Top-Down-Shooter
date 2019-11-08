@@ -172,6 +172,12 @@ struct edge
 		//normal = (endP - startP).norm().rot(PI * 0.5);
 		normal *= -1.0f;
 	}
+
+	void move(vect2 m)
+	{
+		startP	+= m;
+		endP	+= m;
+	}
 };
 
 

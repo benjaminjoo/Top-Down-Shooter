@@ -18,7 +18,7 @@ private:
 	clock_t						oldTime;
 	clock_t						newTime;
 	clock_t						frameTime;
-	unsigned int				frameCount;
+	clock_t						frameCount;
 
 	std::vector<EnemyVehicle>	Enemies;
 	std::vector<Projectile>		Bullets;

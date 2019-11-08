@@ -50,6 +50,7 @@ public:
 	void drawLine(const screenCoord& startP, const screenCoord& endP, const Uint32& colour);
 	void drawBoundingBox(boundingBoxScreen BB, const Uint32& colour);
 	void drawCircle(const screenCoord& centreP, const int& radius, const Uint32& colour);
+	void drawRectangle(const screenCoord& topLeft, const screenCoord& bottomRight, const Uint32& colour);
 	void solidFillTriangle(const screenCoord& a, const screenCoord& b, const screenCoord& c, const Uint32& colour);
 	void solidFillConvexPoly(unsigned int n, const screenCoord* P, const Uint32& colour);
 	void renderTriangle(const triangle2& t, vect2 A, vect2 B, vect2 C, const double& scale, Texture* texture);

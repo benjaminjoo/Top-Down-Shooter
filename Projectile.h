@@ -20,6 +20,9 @@ private:
 	vect2	acceleration;
 
 	double	diameter;
+	double  density;
+	//double	mass;
+	//double	momentum;
 	double  kineticEnergy;
 
 public:
@@ -28,6 +31,8 @@ public:
 	Projectile(const int& id, const vect2& pos, const double& rot, const vect2& vel, const vect2& acc, const double& d);
 	~Projectile();
 
+	double getMass();
+	double getMomentum();
 	double getKineticEnergy();
 	void update(std::vector<edge> walls, std::vector<Projectile> bullets, Canvas* screen);
 	void draw(Canvas* screen);

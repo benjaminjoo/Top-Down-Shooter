@@ -283,6 +283,15 @@ void Canvas::drawCircle(const screenCoord& centreP, const int& radius, const Uin
 }
 
 
+void Canvas::drawRectangle(const screenCoord& topLeft, const screenCoord& bottomRight, const Uint32& colour)
+{
+	this->drawLine(screenCoord(topLeft.x, topLeft.y), screenCoord(bottomRight.x, topLeft.y), colour);
+	this->drawLine(screenCoord(topLeft.x, bottomRight.y), screenCoord(bottomRight.x, bottomRight.y), colour);
+	this->drawLine(screenCoord(topLeft.x, topLeft.y), screenCoord(topLeft.x, bottomRight.y), colour);
+	this->drawLine(screenCoord(bottomRight.x, topLeft.y), screenCoord(bottomRight.x, bottomRight.y), colour);
+}
+
+
 void Canvas::solidFillTriangle(const screenCoord& a, const screenCoord& b, const screenCoord& c, const Uint32& colour)
 {
 	screenCoord pt[3] = { a, b, c };
@@ -777,15 +786,13 @@ void Canvas::displayInt(int value, int font_size, int xPos, int yPos, Uint32 col
 
 	if (border)
 	{
-		int topLeftX = xPos - (int)((double)(font_size * nInt) * 0.5f) - thck;
-		int topLeftY = yPos - (int)((double)font_size * 0.5f) - thck;
-		int bottomRightX = xPos + (int)((double)(font_size * nInt) * 0.5f) + thck;
-		int bottomRightY = yPos + (int)((double)font_size * 0.5f) + thck;
+		screenCoord topLeft, bottomRight;
+		topLeft.x = xPos - (int)((double)(font_size * nInt) * 0.5f) - thck;
+		topLeft.y = yPos - (int)((double)font_size * 0.5f) - thck;
+		bottomRight.x = xPos + (int)((double)(font_size * nInt) * 0.5f) + thck;
+		bottomRight.y = yPos + (int)((double)font_size * 0.5f) + thck;
 
-		this->drawLine(screenCoord(topLeftX, topLeftY),		screenCoord(bottomRightX, topLeftY),		colour);
-		this->drawLine(screenCoord(topLeftX, bottomRightY), screenCoord(bottomRightX, bottomRightY),	colour);
-		this->drawLine(screenCoord(topLeftX, topLeftY),		screenCoord(topLeftX, bottomRightY),		colour);
-		this->drawLine(screenCoord(bottomRightX, topLeftY), screenCoord(bottomRightX, bottomRightY),	colour);
+		this->drawRectangle(topLeft, bottomRight, colour);
 	}
 }
 

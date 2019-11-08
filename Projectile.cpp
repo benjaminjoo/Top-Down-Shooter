@@ -13,6 +13,9 @@ Projectile::Projectile(const int& id, const vect2& pos, const double& rot, const
 	acceleration	= acc;
 
 	diameter		= d;
+	density			= 1.0f;
+	//mass;
+	//momentum;
 
 	unitMove		= 2.0f;
 	kineticEnergy	= this->getKineticEnergy();
@@ -26,9 +29,23 @@ Projectile::~Projectile()
 }
 
 
+double Projectile::getMass()
+{
+	double radius = diameter * 0.5f;
+
+	return 4.0f / 3.0f * radius * radius * radius * PI * density;
+}
+
+
+double Projectile::getMomentum()
+{
+	return this->getMass() * velocity.len();
+}
+
+
 double Projectile::getKineticEnergy()
 {
-	return 0.5f * diameter* velocity.lenSquared();
+	return 0.5f * this->getMass() * velocity.lenSquared();
 }
 
 

@@ -48,6 +48,15 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PongBall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PongGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PongBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Canvas.h">
@@ -88,6 +97,15 @@
     </ClInclude>
     <ClInclude Include="BSPTree.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PongBall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PongGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PongBar.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
