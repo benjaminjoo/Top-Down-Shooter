@@ -1,15 +1,18 @@
 #include "PongGame.h"
 
 
-
-PongGame::PongGame(World* L, Canvas* S, EventHandler* C, PongBall* B, PongBar* P)
+PongGame::PongGame(	std::shared_ptr<World>			L,
+					std::shared_ptr<Canvas>			S,
+					std::shared_ptr<EventHandler>	C,
+					std::shared_ptr<PongBall>		B,
+					std::shared_ptr<PongBar>		P)
 {
 	Level		= L;
 	Screen		= S;
 	Controls	= C;
 	Ball		= B;
 	Player		= P;
-
+	
 	oldTime		= 0;
 	newTime		= 0;
 	frameTime	= 0;

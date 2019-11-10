@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <time.h>
 
 #include "World.h"
@@ -36,14 +37,17 @@ private:
 
 public:
 
-	World*			Level;
-	Canvas*			Screen;
-	EventHandler*	Controls;
-	PlayerVehicle*	Player;
+	std::shared_ptr<World>			Level;
+	std::shared_ptr<Canvas>			Screen;
+	std::shared_ptr<EventHandler>	Controls;
+	std::shared_ptr<PlayerVehicle>	Player;
 
 	unsigned int	nBullet;
 
-	Game(World* L, Canvas* S, EventHandler* E, PlayerVehicle* P);
+	Game(	std::shared_ptr<World>			L,
+			std::shared_ptr<Canvas>			S,
+			std::shared_ptr<EventHandler>	C,
+			std::shared_ptr<PlayerVehicle>	P);
 	~Game();
 
 	void buildBSPTree();

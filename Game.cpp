@@ -3,11 +3,14 @@
 #include "Game.h"
 
 
-Game::Game(World* L, Canvas* S, EventHandler* E, PlayerVehicle* P)
+Game::Game(		std::shared_ptr<World>			L,
+				std::shared_ptr<Canvas>			S,
+				std::shared_ptr<EventHandler>	C,
+				std::shared_ptr<PlayerVehicle>	P)
 {
 	Level		= L;
 	Screen		= S;
-	Controls	= E;
+	Controls	= C;
 	Player		= P;
 
 	oldTime		= 0;
@@ -15,7 +18,7 @@ Game::Game(World* L, Canvas* S, EventHandler* E, PlayerVehicle* P)
 	frameTime	= 0;
 	frameCount	= 0;
 
-	nBullet		= 0;
+	nBullet = 0;
 
 	std::cout << "Game created sussecfully..." << std::endl;
 }
@@ -93,7 +96,6 @@ void Game::updateBullets()
 	for (auto i = Bullets.begin(); i != Bullets.end(); ++i)
 	{
 		i->update(Level->edgeList, Bullets, Screen);
-		//i->checkForCollision(Level->edgeList, Bullets, Screen);
 	}
 }
 
@@ -106,7 +108,7 @@ void Game::drawWorld()
 
 void Game::drawPlayer()
 {
-	Player->draw(Screen, &Textures[Player->getTextureID()]);
+	Player->draw(Screen);
 }
 
 

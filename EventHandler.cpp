@@ -53,7 +53,7 @@ EventHandler::EventHandler(const double& turn_, const double& move_, const doubl
 
 EventHandler::~EventHandler()
 {
-	std::cout << "EventHandler created sussecfully..." << std::endl;
+	std::cout << "EventHandler destroyed sussecfully..." << std::endl;
 }
 
 

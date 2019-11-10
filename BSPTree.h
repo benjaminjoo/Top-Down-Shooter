@@ -1,13 +1,15 @@
 #pragma once
 
+#include <memory>
+
 #include "Canvas.h"
 
 
 struct record
 {
-	int content;
-	record* left_child;
-	record* right_child;
+	int content = 0;
+	std::shared_ptr<record> left_child	= nullptr;
+	std::shared_ptr<record> right_child = nullptr;
 };
 
 
@@ -15,7 +17,7 @@ class Tree
 {
 private:
 
-	Canvas*		Screen;
+	std::shared_ptr<Canvas> Screen;
 
 	int			rootPosition;
 	int			spacingH;
@@ -25,12 +27,11 @@ private:
 	int			maxDepth;
 	Uint32		text_colour;
 
-	record*		rootNode;
+	std::shared_ptr<record> rootNode;
 	
+	void send2Tree(const int& a, std::shared_ptr<record> node);
 
-	void send2Tree(const int& a, record* node);
-
-	void traverseTree(const int& level, const int& position, record* node);
+	void traverseTree(const int& level, const int& position, std::shared_ptr<record> node);
 
 	void drawNode(const record& node, const int& level, const int& xPos);
 
@@ -38,7 +39,7 @@ protected:
 
 public:
 
-	Tree(Canvas* S, const int& rootContent);
+	Tree(std::shared_ptr<Canvas> S, const int& rootContent);
 	~Tree();
 
 	void add2Tree(const int& a);
@@ -50,28 +51,28 @@ public:
 };
 
 
-Tree::Tree(Canvas* S, const int& rootContent)
+Tree::Tree(std::shared_ptr<Canvas> S, const int& rootContent)
 {
-	Screen					= S;
+	Screen = S;
 
-	spacingH				= 64;
+	spacingH = 64;
 
-	fontSize				= 8;
+	fontSize = 8;
 
-	border					= 4;
+	border = 4;
 
-	maxWidth				= 1024;
+	maxWidth = 1024;
 
-	maxDepth				= Screen->getHeight() / spacingH - 1;
+	maxDepth = Screen->getHeight() / spacingH - 1;
 
-	rootPosition			= (int)((double)Screen->getWidth() * 0.5f);
+	rootPosition = (int)((double)Screen->getWidth() * 0.5f);
 
-	text_colour				= argbColour(0, 255, 255, 255);
+	text_colour = argbColour(0, 255, 255, 255);
 
-	rootNode				= new record;
-	rootNode->content		= rootContent;
-	rootNode->left_child	= nullptr;
-	rootNode->right_child	= nullptr;
+	rootNode = std::make_shared<record>();
+	rootNode->content = rootContent;
+	rootNode->left_child = nullptr;
+	rootNode->right_child = nullptr;
 }
 
 
@@ -81,13 +82,13 @@ Tree::~Tree()
 }
 
 
-void Tree::send2Tree(const int& a, record* node)
+void Tree::send2Tree(const int& a, std::shared_ptr<record> node)
 {
 	if (a > node->content)
 	{
 		if (node->right_child == nullptr)
 		{
-			node->right_child = new record;
+			node->right_child = std::make_shared<record>();
 			node->right_child->content = a;
 			node->right_child->left_child = nullptr;
 			node->right_child->right_child = nullptr;
@@ -101,7 +102,7 @@ void Tree::send2Tree(const int& a, record* node)
 	{
 		if (node->left_child == nullptr)
 		{
-			node->left_child = new record;
+			node->left_child = std::make_shared<record>();
 			node->left_child->content = a;
 			node->left_child->left_child = nullptr;
 			node->left_child->right_child = nullptr;
@@ -165,7 +166,7 @@ void Tree::drawTree()
 }
 
 
-void Tree::traverseTree(const int& level, const int& position, record* node)
+void Tree::traverseTree(const int& level, const int& position, std::shared_ptr<record> node)
 {
 	this->drawNode(*node, level, position);
 	if (node->left_child != nullptr)

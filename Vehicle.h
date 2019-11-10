@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "Math.h"
 #include "Canvas.h"
@@ -32,15 +33,13 @@ public:
 
 	virtual void updatePosition()	= 0;
 	virtual void actOnCollision()	= 0;
-	//virtual vect2 getVelocity()		= 0;
 
 	int getTextureID();
 	void getRectangle(vect2 offset);
 	vect2 getDirection();
 	
-	//void checkForCollision();
 	void shoot(std::vector<Projectile>& bullets);
-	//void checkForCollision(std::vector<edge> walls, Canvas* screen);
-	void draw(Canvas* screen, Texture* texture);
+	void draw(std::shared_ptr<Canvas> screen);
+	void draw(std::shared_ptr<Canvas> screen, std::shared_ptr<Texture> texture);
 };
 

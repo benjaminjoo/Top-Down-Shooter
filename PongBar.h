@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <SDL/SDL.h>
 #include <string>
 #include "Math.h"
@@ -22,6 +23,6 @@ public:
 
 	void addEdge(edge e);
 	void update(vect2 translation);
-	void draw(Canvas* screen);
+	void draw(std::shared_ptr<Canvas> screen);
 };
 

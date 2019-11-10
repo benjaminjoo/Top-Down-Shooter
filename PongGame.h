@@ -21,18 +21,29 @@ private:
 
 public:
 
-	World*			Level;
-	Canvas*			Screen;
-	EventHandler*	Controls;
-	PongBall*		Ball;
-	PongBar*		Player;
+	//World*						Level;
+	//Canvas*						Screen;
+	//EventHandler*					Controls;
+	//PongBall*						Ball;
+	//PongBar*						Player;
+
+	std::shared_ptr<World>			Level;
+	std::shared_ptr<Canvas>			Screen;
+	std::shared_ptr<EventHandler>	Controls;
+	std::shared_ptr<PongBall>		Ball;
+	std::shared_ptr<PongBar>		Player;
 
 	clock_t			oldTime;
 	clock_t			newTime;
 	clock_t			frameTime;
 	clock_t			frameCount;
 
-	PongGame(World* L, Canvas* S, EventHandler* C, PongBall* B, PongBar* P);
+	//PongGame(World* L, Canvas* S, EventHandler* C, PongBall* B, PongBar* P);
+	PongGame(	std::shared_ptr<World>			L,
+				std::shared_ptr<Canvas>			S,
+				std::shared_ptr<EventHandler>	C,
+				std::shared_ptr<PongBall>		B,
+				std::shared_ptr<PongBar>		P);
 	~PongGame();
 
 	void updateAll();

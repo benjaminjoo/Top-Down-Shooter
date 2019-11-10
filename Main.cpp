@@ -1,6 +1,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <iostream>
+#include <memory>
 
 #include <cstdlib>
 #include <ctime>
@@ -30,11 +31,11 @@ void pong();
 int main(int argc, char** argv)
 {
 
+	auto p = std::make_shared <int>(5);
+
 	pong();
 	//physics();
 	//bspTree();
-
-
 
 	return 0;
 }
@@ -42,25 +43,12 @@ int main(int argc, char** argv)
 
 void bspTree()
 {
-	Canvas Screen(1024, 600, 0.5f, "BSP Tree Visualisation");
-	Screen.setClearColour(argbColour(0, 0, 0, 255));
+	auto Screen = std::make_shared<Canvas>(1024, 600, 0.5f, "BSP Tree Visualisation");
+	Screen->setClearColour(argbColour(0, 0, 0, 255));
 
 	EventHandler Controls;
 
-	//Tree test_tree(&Screen, 10);
-	//
-	//test_tree.add2Tree(20);
-	//test_tree.add2Tree(25);
-	//test_tree.add2Tree(5);
-	//test_tree.add2Tree(15);
-	//test_tree.add2Tree(30);
-	//test_tree.add2Tree(40);
-	//test_tree.add2Tree(18);
-	//test_tree.add2Tree(14);
-	//test_tree.add2Tree(8);
-	//test_tree.add2Tree(2);
-
-	Tree test_tree(&Screen, 40);
+	Tree test_tree(Screen, 40);
 
 	srand(time(NULL));
 	unsigned int n = 20;
@@ -72,26 +60,25 @@ void bspTree()
 
 	while (Controls.isRunning())
 	{
-		Screen.clear();
+		Screen->clear();
 
 		test_tree.drawTree();
 
 		Controls.HandleUserEvents();
 
-		Screen.update();
+		Screen->update();
 	}
 }
 
 
 void physics()
 {
-	World			Space("The Final Frontier");
-	Canvas			Screen(1200, 600, 0.5f, "Untitled");
-	EventHandler	Controls(0.0f, 0.0f, 0.0f, 1.0f);
-	PlayerVehicle	Pilot(60.0f, 80.0f, 100.0f, vect2(500.0f, 500.0f), 0.0f, vect2(1.0f, -1.0f));
+	auto Space		= std::make_shared<World>("The Final Frontier");
+	auto Screen		= std::make_shared<Canvas>(1200, 600, 0.5f, "Untitled");
+	auto Controls	= std::make_shared<EventHandler>(0.0f, 0.0f, 0.0f, 1.0f);
+	auto Pilot		= std::make_shared<PlayerVehicle>(60.0f, 80.0f, 100.0f, vect2(500.0f, 500.0f), 0.0f, vect2(1.0f, -1.0f));
 
-	Game Shooter(&Space, &Screen, &Controls, &Pilot);
-
+	Game Shooter(Space, Screen, Controls, Pilot);
 
 	Shooter.Screen->setClearColour(argbColour(0, 0, 0, 0));
 
@@ -99,22 +86,22 @@ void physics()
 	Shooter.addTexture(Texture("Assets/millenium_falcon_top_view_small.jpg"));
 
 
-	Space.addEdge(edge(vect2(140.7, 223.5), vect2(621.0, 223.5)));
-	Space.addEdge(edge(vect2(621.0, 223.5), vect2(621.0, 79.2)));
-	Space.addEdge(edge(vect2(621.0, 79.2), vect2(1275.4, 79.2)));
-	Space.addEdge(edge(vect2(1275.4, 79.2), vect2(1275.4, 365.4)));
-	Space.addEdge(edge(vect2(1275.4, 365.4), vect2(1912.4, 365.4)));
-	Space.addEdge(edge(vect2(1912.4, 365.4), vect2(1912.4, 153.9)));
-	Space.addEdge(edge(vect2(1912.4, 153.9), vect2(2300.6, 153.9)));
-	Space.addEdge(edge(vect2(2300.6, 153.9), vect2(2300.6, 945.1)));
-	Space.addEdge(edge(vect2(2300.6, 945.1), vect2(1591.4, 945.1)));
-	Space.addEdge(edge(vect2(1591.4, 945.1), vect2(1591.4, 1099.4)));
-	Space.addEdge(edge(vect2(1591.4, 1099.4), vect2(842.4, 1099.4)));
-	Space.addEdge(edge(vect2(842.4, 1099.4), vect2(842.4, 798.3)));
-	Space.addEdge(edge(vect2(842.4, 798.3), vect2(66.1, 798.3)));
-	Space.addEdge(edge(vect2(66.1, 798.3), vect2(66.1, 467.4)));
-	Space.addEdge(edge(vect2(140.7, 467.4), vect2(140.7, 223.5)));
-	Space.addEdge(edge(vect2(66.1, 467.4), vect2(140.7, 467.4)));
+	Space->addEdge(edge(vect2(140.7, 223.5), vect2(621.0, 223.5)));
+	Space->addEdge(edge(vect2(621.0, 223.5), vect2(621.0, 79.2)));
+	Space->addEdge(edge(vect2(621.0, 79.2), vect2(1275.4, 79.2)));
+	Space->addEdge(edge(vect2(1275.4, 79.2), vect2(1275.4, 365.4)));
+	Space->addEdge(edge(vect2(1275.4, 365.4), vect2(1912.4, 365.4)));
+	Space->addEdge(edge(vect2(1912.4, 365.4), vect2(1912.4, 153.9)));
+	Space->addEdge(edge(vect2(1912.4, 153.9), vect2(2300.6, 153.9)));
+	Space->addEdge(edge(vect2(2300.6, 153.9), vect2(2300.6, 945.1)));
+	Space->addEdge(edge(vect2(2300.6, 945.1), vect2(1591.4, 945.1)));
+	Space->addEdge(edge(vect2(1591.4, 945.1), vect2(1591.4, 1099.4)));
+	Space->addEdge(edge(vect2(1591.4, 1099.4), vect2(842.4, 1099.4)));
+	Space->addEdge(edge(vect2(842.4, 1099.4), vect2(842.4, 798.3)));
+	Space->addEdge(edge(vect2(842.4, 798.3), vect2(66.1, 798.3)));
+	Space->addEdge(edge(vect2(66.1, 798.3), vect2(66.1, 467.4)));
+	Space->addEdge(edge(vect2(140.7, 467.4), vect2(140.7, 223.5)));
+	Space->addEdge(edge(vect2(66.1, 467.4), vect2(140.7, 467.4)));
 
 
 	srand(time(NULL));
@@ -151,54 +138,53 @@ void physics()
 
 void pong()
 {
-	World			Space("Pong");
-	Canvas			Screen(PITCH_LENGTH, PITCH_HEIGHT, 1.0f, "Pong");
-	EventHandler	Controls(0.0f, 0.0f, 0.0f, 1.0f);
-	PongBall		Ball;
-	PongBar			Player;
+	auto Space		= std::make_shared<World>("Pong");
+	auto Screen		= std::make_shared<Canvas>(PITCH_LENGTH, PITCH_HEIGHT, 1.0f, "Pong");
+	auto Controls	= std::make_shared<EventHandler>(0.0f, 0.0f, 0.0f, 1.0f);
+	auto Ball		= std::make_shared<PongBall>(10.0f);
+	auto Player		= std::make_shared<PongBar>();
 
-	PongGame PingPong(&Space, &Screen, &Controls, &Ball, &Player);
+	PongGame PingPong(Space, Screen, Controls, Ball, Player);
 
 	PingPong.Screen->setClearColour(argbColour(0, 0, 0, 0));
 
-	//Space.addEdge(edge(vect2(10.0, 20.0), vect2(1190.0, 10.0)));
-	//Space.addEdge(edge(vect2(10.0, 580.0), vect2(10.0, 20.0)));
-	//Space.addEdge(edge(vect2(1190.0, 590.0), vect2(10.0, 580.0)));
+	Space->addEdge(edge(vect2(10.0, 10.0), vect2(1190.0, 10.0)));
+	Space->addEdge(edge(vect2(10.0, 590.0), vect2(10.0, 10.0)));
+	Space->addEdge(edge(vect2(1190.0, 590.0), vect2(10.0, 590.0)));
 
+	Player->addEdge(edge(vect2(900.0f, -100.0f), vect2(900.0f, 100.0f)));
 
-	Space.addEdge(edge(vect2(1146.0, 24.0), vect2(817.0, 70.0)));
-	Space.addEdge(edge(vect2(817.0, 70.0), vect2(1146.0, 24.0)));
-	Space.addEdge(edge(vect2(817.0, 70.0), vect2(629.0, 50.0)));
-	Space.addEdge(edge(vect2(629.0, 50.0), vect2(817.0, 70.0)));
-	Space.addEdge(edge(vect2(629.0, 50.0), vect2(546.0, 16.0)));
-	Space.addEdge(edge(vect2(546.0, 16.0), vect2(629.0, 50.0)));
-	Space.addEdge(edge(vect2(546.0, 16.0), vect2(255.0, 20.0)));
-	Space.addEdge(edge(vect2(255.0, 20.0), vect2(546.0, 16.0)));
-	Space.addEdge(edge(vect2(255.0, 20.0), vect2(31.0, 49.0)));
-	Space.addEdge(edge(vect2(31.0, 49.0), vect2(255.0, 20.0)));
-	Space.addEdge(edge(vect2(31.0, 49.0), vect2(17.0, 163.0)));
-	Space.addEdge(edge(vect2(17.0, 163.0), vect2(31.0, 49.0)));
-	Space.addEdge(edge(vect2(17.0, 163.0), vect2(51.0, 346.0)));
-	Space.addEdge(edge(vect2(51.0, 346.0), vect2(17.0, 163.0)));
-	Space.addEdge(edge(vect2(51.0, 346.0), vect2(21.0, 435.0)));
-	Space.addEdge(edge(vect2(21.0, 435.0), vect2(51.0, 346.0)));
-	Space.addEdge(edge(vect2(21.0, 435.0), vect2(129.4, 542.6)));
-	Space.addEdge(edge(vect2(129.4, 542.6), vect2(21.0, 435.0)));
-	Space.addEdge(edge(vect2(129.4, 542.6), vect2(442.6, 491.0)));
-	Space.addEdge(edge(vect2(442.6, 491.0), vect2(129.4, 542.6)));
-	Space.addEdge(edge(vect2(442.6, 491.0), vect2(559.0, 548.6)));
-	Space.addEdge(edge(vect2(559.0, 548.6), vect2(442.6, 491.0)));
-	Space.addEdge(edge(vect2(559.0, 548.6), vect2(843.4, 523.4)));
-	Space.addEdge(edge(vect2(843.4, 523.4), vect2(559.0, 548.6)));
-	Space.addEdge(edge(vect2(843.4, 523.4), vect2(935.8, 462.2)));
-	Space.addEdge(edge(vect2(935.8, 462.2), vect2(843.4, 523.4)));
-	Space.addEdge(edge(vect2(935.8, 462.2), vect2(1153.0, 475.4)));
-	Space.addEdge(edge(vect2(1153.0, 475.4), vect2(935.8, 462.2)));
+	//Space.addEdge(edge(vect2(1146.0, 24.0), vect2(817.0, 70.0)));
+	//Space.addEdge(edge(vect2(817.0, 70.0), vect2(1146.0, 24.0)));
+	//Space.addEdge(edge(vect2(817.0, 70.0), vect2(629.0, 50.0)));
+	//Space.addEdge(edge(vect2(629.0, 50.0), vect2(817.0, 70.0)));
+	//Space.addEdge(edge(vect2(629.0, 50.0), vect2(546.0, 16.0)));
+	//Space.addEdge(edge(vect2(546.0, 16.0), vect2(629.0, 50.0)));
+	//Space.addEdge(edge(vect2(546.0, 16.0), vect2(255.0, 20.0)));
+	//Space.addEdge(edge(vect2(255.0, 20.0), vect2(546.0, 16.0)));
+	//Space.addEdge(edge(vect2(255.0, 20.0), vect2(31.0, 49.0)));
+	//Space.addEdge(edge(vect2(31.0, 49.0), vect2(255.0, 20.0)));
+	//Space.addEdge(edge(vect2(31.0, 49.0), vect2(17.0, 163.0)));
+	//Space.addEdge(edge(vect2(17.0, 163.0), vect2(31.0, 49.0)));
+	//Space.addEdge(edge(vect2(17.0, 163.0), vect2(51.0, 346.0)));
+	//Space.addEdge(edge(vect2(51.0, 346.0), vect2(17.0, 163.0)));
+	//Space.addEdge(edge(vect2(51.0, 346.0), vect2(21.0, 435.0)));
+	//Space.addEdge(edge(vect2(21.0, 435.0), vect2(51.0, 346.0)));
+	//Space.addEdge(edge(vect2(21.0, 435.0), vect2(129.4, 542.6)));
+	//Space.addEdge(edge(vect2(129.4, 542.6), vect2(21.0, 435.0)));
+	//Space.addEdge(edge(vect2(129.4, 542.6), vect2(442.6, 491.0)));
+	//Space.addEdge(edge(vect2(442.6, 491.0), vect2(129.4, 542.6)));
+	//Space.addEdge(edge(vect2(442.6, 491.0), vect2(559.0, 548.6)));
+	//Space.addEdge(edge(vect2(559.0, 548.6), vect2(442.6, 491.0)));
+	//Space.addEdge(edge(vect2(559.0, 548.6), vect2(843.4, 523.4)));
+	//Space.addEdge(edge(vect2(843.4, 523.4), vect2(559.0, 548.6)));
+	//Space.addEdge(edge(vect2(843.4, 523.4), vect2(935.8, 462.2)));
+	//Space.addEdge(edge(vect2(935.8, 462.2), vect2(843.4, 523.4)));
+	//Space.addEdge(edge(vect2(935.8, 462.2), vect2(1153.0, 475.4)));
+	//Space.addEdge(edge(vect2(1153.0, 475.4), vect2(935.8, 462.2)));
 
-
-
-	Player.addEdge(edge(vect2(900.0f, -50.0f), vect2(880.0f, 0.0f)));
-	Player.addEdge(edge(vect2(880.0f, 0.0f), vect2(900.0f, 50.0f)));
+	//Player.addEdge(edge(vect2(900.0f, -50.0f), vect2(880.0f, 0.0f)));
+	//Player.addEdge(edge(vect2(880.0f, 0.0f), vect2(900.0f, 50.0f)));
 
 	while (PingPong.Controls->isRunning())
 	{
@@ -208,7 +194,7 @@ void pong()
 		PingPong.drawAll();
 		PingPong.updateAll();
 
-		vect2 currentPos = Ball.getPosition();
+		vect2 currentPos = Ball->getPosition();
 
 		if (currentPos.x < 0						||
 			currentPos.x >= (double)PITCH_LENGTH	||
@@ -216,7 +202,7 @@ void pong()
 			currentPos.y >= (double)PITCH_HEIGHT
 			)
 		{
-			Ball.reset();
+			Ball->reset();
 		}
 
 		PingPong.updateFrameCount();

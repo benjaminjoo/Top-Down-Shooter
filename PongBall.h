@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector> 
+#include <memory>
 #include <ctime>
 
 #include "Math.h"
@@ -11,6 +12,7 @@ class PongBall
 {
 private:
 
+	double	speed;
 	vect2	position;
 	vect2	velocity;
 	double	diameter;
@@ -19,6 +21,7 @@ private:
 public:
 
 	PongBall();
+	PongBall(double v);
 	~PongBall();
 
 	void setPosition(vect2 p);
@@ -28,8 +31,7 @@ public:
 
 	vect2 getPosition();
 
-	//void update(std::vector<edge> walls, std::vector<edge> player, Canvas* screen);
-	void update(std::vector<edge> edges, Canvas* screen);
-	void draw(Canvas* screen);
+	void update(std::vector<edge> edges, std::shared_ptr<Canvas> screen);
+	void draw(std::shared_ptr<Canvas> screen);
 };
 

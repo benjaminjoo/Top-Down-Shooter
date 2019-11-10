@@ -32,13 +32,11 @@ void PongBar::update(vect2 translation)
 }
 
 
-void PongBar::draw(Canvas* screen)
+void PongBar::draw(std::shared_ptr<Canvas> screen)
 {
-	//std::cout << "Drawing bar..." << std::endl;
 	double s = screen->getScale();
 	for (auto i : edgeList)
 	{
-		//std::cout << i.startP.onScreen(s).x << ", " << i.startP.onScreen(s).y << ", " << i.endP.onScreen(s).x << ", " << i.endP.onScreen(s).y <<std::endl;
 		screen->drawLine(i.startP.onScreen(s), i.endP.onScreen(s), colour);
 	}
 }

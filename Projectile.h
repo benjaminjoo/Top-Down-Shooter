@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector> 
+#include <memory>
 
 #include "Math.h"
 #include "Canvas.h"
@@ -21,8 +22,6 @@ private:
 
 	double	diameter;
 	double  density;
-	//double	mass;
-	//double	momentum;
 	double  kineticEnergy;
 
 public:
@@ -34,7 +33,7 @@ public:
 	double getMass();
 	double getMomentum();
 	double getKineticEnergy();
-	void update(std::vector<edge> walls, std::vector<Projectile> bullets, Canvas* screen);
-	void draw(Canvas* screen);
+	void update(std::vector<edge> walls, std::vector<Projectile> bullets, std::shared_ptr<Canvas> screen);
+	void draw(std::shared_ptr<Canvas> screen);
 };
 

@@ -1,21 +1,39 @@
 #include "PongBall.h"
 
 
-
 PongBall::PongBall()
 {
+	speed = 5.0f;
+
 	srand(time(NULL));
 	vect2 pos;
 	pos.x = 50.0f;
 	pos.y = 250.0f + (double)(rand() % 100);
 	double ang = (double)((-30 + rand() % 60) / 180.0f * PI);
-	double speed = 6.0f;
 	vect2 vel(speed * cos(ang), speed * sin(ang));
 
 	position	= pos;
 	velocity	= vel;
 	diameter	= 10.0f;
 	colour		= argbColour(0, 0, 0, 255);
+}
+
+
+PongBall::PongBall(double v)
+{
+	speed = v;
+
+	srand(time(NULL));
+	vect2 pos;
+	pos.x = 50.0f;
+	pos.y = 250.0f + (double)(rand() % 100);
+	double ang = (double)((-30 + rand() % 60) / 180.0f * PI);
+	vect2 vel(speed * cos(ang), speed * sin(ang));
+
+	position = pos;
+	velocity = vel;
+	diameter = 10.0f;
+	colour = argbColour(0, 0, 0, 255);
 }
 
 
@@ -44,7 +62,6 @@ void PongBall::reset()
 	pos.x = 50.0f;
 	pos.y = 250.0f + (double)(rand() % 100);
 	double ang = (double)((-30 + rand() % 60) / 180.0f * PI);
-	double speed = 10.0f;
 	vect2 vel(speed * cos(ang), speed * sin(ang));
 
 	position = pos;
@@ -58,7 +75,7 @@ vect2 PongBall::getPosition()
 }
 
 
-void PongBall::update(std::vector<edge> edges, Canvas* screen)
+void PongBall::update(std::vector<edge> edges, std::shared_ptr<Canvas> screen)
 {
 	vect2 oldPos = position;
 	vect2 newPos = position + velocity;
@@ -97,7 +114,7 @@ void PongBall::update(std::vector<edge> edges, Canvas* screen)
 	position += velocity;
 }
 
-void PongBall::draw(Canvas* screen)
+void PongBall::draw(std::shared_ptr<Canvas> screen)
 {
 	screen->drawCircle(position.onScreen(screen->getScale()), (int)(diameter * 0.5f), 255);
 }

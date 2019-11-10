@@ -39,7 +39,7 @@ void World::update()
 }
 
 
-void World::draw(Canvas* screen)
+void World::draw(std::shared_ptr<Canvas> screen)
 {
 	double s = screen->getScale();
 	for (auto i : edgeList)

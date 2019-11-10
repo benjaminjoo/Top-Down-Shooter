@@ -52,7 +52,7 @@ void EnemyVehicle::update()
 }
 
 
-void EnemyVehicle::draw(Canvas* screen)
+void EnemyVehicle::draw(std::shared_ptr<Canvas> screen)
 {
 
 }

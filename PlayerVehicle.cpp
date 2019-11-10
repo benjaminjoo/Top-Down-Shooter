@@ -39,7 +39,7 @@ void PlayerVehicle::actOnCollision()
 }
 
 
-vect2 PlayerVehicle::getVelocity(EventHandler* controls)
+vect2 PlayerVehicle::getVelocity(std::shared_ptr<EventHandler> controls)
 {
 	vect2 temp;
 	rotation = controls->turn * PI / 180.0f;
@@ -49,7 +49,7 @@ vect2 PlayerVehicle::getVelocity(EventHandler* controls)
 }
 
 
-void PlayerVehicle::handleCollision(EventHandler* controls, std::vector<edge> walls)
+void PlayerVehicle::handleCollision(std::shared_ptr<EventHandler> controls, std::vector<edge> walls)
 {
 	vect2 speed = this->getVelocity(controls);
 
@@ -132,7 +132,7 @@ void PlayerVehicle::handleCollision(EventHandler* controls, std::vector<edge> wa
 }
 
 
-void PlayerVehicle::update(EventHandler* controls, std::vector<Projectile>& bullets)
+void PlayerVehicle::update(std::shared_ptr<EventHandler> controls, std::vector<Projectile>& bullets)
 {
 	this->getRectangle(vect2(0.0f, -20.0f));
 

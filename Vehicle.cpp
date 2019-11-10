@@ -60,23 +60,8 @@ void Vehicle::shoot(std::vector<Projectile>& bullets)
 	bullets.push_back(Projectile(1, position, 0.0f, vel, vect2(0.0f, 0.0f), BULLET_DIAMETER));
 }
 
-/*
-void Vehicle::checkForCollision(std::vector<edge> walls, Canvas* screen)
-{
-	for (auto i = walls.begin(); i != walls.end(); ++i)
-	{
-		double distanceToWall = abs(distPoint2Line(position, *i));
-		bool wallIsRelevant = pointIsAroundLine(position, *i);
-		double velocityProjectedToWallNormal = abs(velocity * i->normal);
-		if (wallIsRelevant && (distanceToWall <= velocityProjectedToWallNormal))
-		{
-			velocity -= (i->normal * (2 * (velocity * i->normal)));
-		}
-	}
-}
-*/
 
-void Vehicle::draw(Canvas* screen, Texture* texture)
+void Vehicle::draw(std::shared_ptr<Canvas> screen)
 {
 	double scale = screen->getScale();
 
@@ -84,6 +69,21 @@ void Vehicle::draw(Canvas* screen, Texture* texture)
 
 	vect2 left(position.x + bbRadius * cos(rotation + PI * 0.5f), position.y + bbRadius * sin(rotation + PI * 0.5f));
 	vect2 forw(position.x + bbRadius * cos(rotation			   ), position.y + bbRadius * sin(rotation			  ));
+	vect2 rght(position.x + bbRadius * cos(rotation - PI * 0.5f), position.y + bbRadius * sin(rotation - PI * 0.5f));
+
+	screen->drawLine(left.onScreen(scale), forw.onScreen(scale), argbColour(0, 0xFF, 0xFF, 0xFF));
+	screen->drawLine(rght.onScreen(scale), forw.onScreen(scale), argbColour(0, 0xFF, 0xFF, 0xFF));
+}
+
+
+void Vehicle::draw(std::shared_ptr<Canvas> screen, std::shared_ptr<Texture> texture)
+{
+	double scale = screen->getScale();
+
+	screen->drawCircle(position.onScreen(scale), (int)(bbRadius * scale), argbColour(0, 0, 0, 255));
+
+	vect2 left(position.x + bbRadius * cos(rotation + PI * 0.5f), position.y + bbRadius * sin(rotation + PI * 0.5f));
+	vect2 forw(position.x + bbRadius * cos(rotation), position.y + bbRadius * sin(rotation));
 	vect2 rght(position.x + bbRadius * cos(rotation - PI * 0.5f), position.y + bbRadius * sin(rotation - PI * 0.5f));
 
 	screen->drawLine(left.onScreen(scale), forw.onScreen(scale), argbColour(0, 0xFF, 0xFF, 0xFF));

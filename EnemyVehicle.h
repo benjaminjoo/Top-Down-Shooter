@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Vehicle.h"
 
 class EnemyVehicle: public Vehicle
@@ -16,6 +18,6 @@ public:
 	~EnemyVehicle();
 
 	void update();
-	void draw(Canvas*);
+	void draw(std::shared_ptr<Canvas>);
 };
 

@@ -49,7 +49,7 @@ double Projectile::getKineticEnergy()
 }
 
 
-void Projectile::draw(Canvas* screen)
+void Projectile::draw(std::shared_ptr<Canvas> screen)
 {
 	screen->drawCircle(position.onScreen(screen->getScale()), (int)(diameter * 0.5f), 255);
 }
@@ -102,7 +102,7 @@ void Projectile::update(std::vector<edge> walls, std::vector<Projectile> bullets
 }
 */
 
-void Projectile::update(std::vector<edge> walls, std::vector<Projectile> bullets, Canvas* screen)
+void Projectile::update(std::vector<edge> walls, std::vector<Projectile> bullets, std::shared_ptr<Canvas> screen)
 {
 	vect2 oldPos = position;
 	vect2 newPos = position + velocity;

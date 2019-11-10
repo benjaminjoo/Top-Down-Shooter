@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <SDL/SDL.h>
 #include <string>
 #include "Math.h"
@@ -29,7 +30,7 @@ public:
 	void turnInsideOut();
 
 	void update();
-	void draw(Canvas* screen);
+	void draw(std::shared_ptr<Canvas> screen);
 
 };
 
