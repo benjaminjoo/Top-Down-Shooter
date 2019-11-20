@@ -21,23 +21,120 @@
 #include "PongBall.h"
 #include "PongBar.h"
 #include "PongGame.h"
+#include "Maze.h"
 
 
 void physics();
 void bspTree();
 void pong();
+void maze();
+void maze(unsigned int w, unsigned int h, unsigned int u, unsigned int t);
 
 
 int main(int argc, char** argv)
 {
+	if (argc == 5)
+	{
+		unsigned int mazeWidth	= unsigned int(atoi(argv[1]));
+		unsigned int mazeHeight = unsigned int(atoi(argv[2]));
+		unsigned int mazeUnit	= unsigned int(atoi(argv[3]));
+		unsigned int mazeThck	= unsigned int(atoi(argv[4]));
 
-	auto p = std::make_shared <int>(5);
+		if (mazeWidth > 256)
+			mazeWidth = 256;
+		if (mazeWidth < 4)
+			mazeWidth = 4;
+		if (mazeHeight > 256)
+			mazeHeight = 256;
+		if (mazeHeight < 4)
+			mazeHeight = 4;
+		if (mazeUnit < 4)
+			mazeUnit = 4;
+		if (mazeThck >= mazeUnit / 2)
+			mazeThck = mazeUnit / 2 - 1;
+		if (mazeThck < 1)
+			mazeThck = 1;
 
-	pong();
+
+		std::cout << "Maze Width:		" << mazeWidth << std::endl;
+		std::cout << "Maze Height:		" << mazeWidth << std::endl;
+		std::cout << "Maze Unit:		" << mazeUnit << std::endl;
+		std::cout << "Maze Thickness:	" << mazeThck << std::endl;
+
+		maze(mazeWidth, mazeHeight, mazeUnit, mazeThck);
+	}
+	else
+	{
+		maze();
+	}
+
+	//pong();
 	//physics();
 	//bspTree();
 
 	return 0;
+}
+
+
+void maze()
+{
+
+#define WIDTH	32
+#define HEIGHT	32
+#define UNIT	16
+#define THCK	2
+
+	auto Screen = std::make_shared<Canvas>(WIDTH * UNIT, HEIGHT * UNIT, 1.0f, "Maze Generation");
+	Screen->setClearColour(argbColour(0, 0, 0, 0));
+
+	EventHandler Controls;
+
+	Maze Labyrinth(Screen, WIDTH, HEIGHT, UNIT, THCK);
+	Labyrinth.setColour(argbColour(0, 255, 255, 255));
+
+	Screen->clear();
+
+	srand(unsigned int(time(NULL)));
+
+	while (Controls.isRunning())	
+	{
+		if (!Controls.paused && !Labyrinth.isComplete)
+		{
+			Labyrinth.construct();
+		}
+		
+		Controls.HandleUserEvents();
+
+		Screen->update();
+	}
+}
+
+
+void maze(unsigned int w, unsigned int h, unsigned int u, unsigned int t)
+{
+	auto Screen = std::make_shared<Canvas>(w * u, h * u, 1.0f, "Maze Generation");
+	Screen->setClearColour(argbColour(0, 0, 0, 0));
+
+	EventHandler Controls;
+
+	Maze Labyrinth(Screen, w, h, u, t);
+	Labyrinth.setColour(argbColour(0, 255, 255, 255));
+
+	Screen->clear();
+
+	srand(unsigned int(time(NULL)));
+
+	while (Controls.isRunning())
+	{
+		if (!Controls.paused && !Labyrinth.isComplete)
+		{
+			Labyrinth.construct();
+		}
+
+		Controls.HandleUserEvents();
+
+		Screen->update();
+	}
 }
 
 
@@ -50,7 +147,7 @@ void bspTree()
 
 	Tree test_tree(Screen, 40);
 
-	srand(time(NULL));
+	srand(unsigned int(time(NULL)));
 	unsigned int n = 20;
 	for (unsigned int i = 0; i < n; i++)
 	{
@@ -80,7 +177,7 @@ void physics()
 
 	Game Shooter(Space, Screen, Controls, Pilot);
 
-	Shooter.Screen->setClearColour(argbColour(0, 0, 0, 0));
+	Shooter.Screen->setClearColour(argbColour(0, 0, 0, 255));
 
 	Shooter.addTexture(Texture("Assets/blue.jpg"));
 	Shooter.addTexture(Texture("Assets/millenium_falcon_top_view_small.jpg"));
@@ -104,7 +201,7 @@ void physics()
 	Space->addEdge(edge(vect2(66.1, 467.4), vect2(140.7, 467.4)));
 
 
-	srand(time(NULL));
+	srand(unsigned int(time(NULL)));
 	unsigned int nBullets = 10;
 	for (unsigned int i = 0; i < nBullets; i++)
 	{
@@ -146,11 +243,11 @@ void pong()
 
 	PongGame PingPong(Space, Screen, Controls, Ball, Player);
 
-	PingPong.Screen->setClearColour(argbColour(0, 0, 0, 0));
+	PingPong.Screen->setClearColour(argbColour(0, 0, 0, 255));
 
 	Space->addEdge(edge(vect2(10.0, 10.0), vect2(1190.0, 10.0)));
-	Space->addEdge(edge(vect2(10.0, 590.0), vect2(10.0, 10.0)));
-	Space->addEdge(edge(vect2(1190.0, 590.0), vect2(10.0, 590.0)));
+	Space->addEdge(edge(vect2(20.0, 590.0), vect2(10.0, 10.0)));
+	Space->addEdge(edge(vect2(1190.0, 590.0), vect2(20.0, 590.0)));
 
 	Player->addEdge(edge(vect2(900.0f, -100.0f), vect2(900.0f, 100.0f)));
 

@@ -18,6 +18,14 @@ enum laterality
 	RIGHT
 };
 
+enum cardinal
+{
+	NORTH,
+	SOUTH,
+	WEST,
+	EAST
+};
+
 template <class T>
 void swap(T& a, T& b)
 {
@@ -29,19 +37,16 @@ void swap(T& a, T& b)
 
 struct screenCoord
 {
-	int x;
-	int y;
+	int x = 0;
+	int y = 0;
 
 	screenCoord()
 	{
-		x = 0;
-		y = 0;
 	}
 
-	screenCoord(int x_, int y_)
+	screenCoord(int x_, int y_):
+		x(x_), y(y_)
 	{
-		x = x_;
-		y = y_;
 	}
 };
 
@@ -101,19 +106,16 @@ struct boundingBoxScreen
 
 struct vect2
 {
-	double x;
-	double y;
+	double x = 0.0f;
+	double y = 0.0f;
 
 	vect2()
 	{
-		x = 0.0f;
-		y = 0.0f;
 	}
 
-	vect2(double x_, double y_)
+	vect2(double x_, double y_):
+		x(x_), y(y_)
 	{
-		x = x_;
-		y = y_;
 	}
 
 	inline vect2	operator +	(const vect2& v)	{ return vect2(this->x + v.x, this->y + v.y);	}

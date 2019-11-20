@@ -17,20 +17,20 @@ private:
 
 	double					scale;
 
-	int						fontSize;
+	int						fontSize = 8;
 
 	SDL_Window*				window;
 	SDL_Renderer*			screen;
 	SDL_Texture*			texture;
 
-	bool					closed;
+	bool					closed = false;
 
 	std::vector<polygon>	polygonBuffer;
 
 protected:
 
-	Uint32*			pixelBuffer;
-	Uint32			clearColour;
+	Uint32*			pixelBuffer = nullptr;
+	Uint32			clearColour = 0;
 
 public:
 

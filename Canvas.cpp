@@ -7,19 +7,9 @@
 #include "Fonts.h"
 
 
-Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& title)
+Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& title):
+	width(w), height(h), scale(s)
 {
-	width			= w;
-	height			= h;
-
-	scale			= s;
-
-	fontSize		= 8;
-
-	closed			= false;
-
-	clearColour		= 0;
-
 	pixelBuffer		= new Uint32[width * height];
 
 	SDL_Init(SDL_INIT_EVERYTHING);

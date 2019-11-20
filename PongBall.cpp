@@ -5,7 +5,7 @@ PongBall::PongBall()
 {
 	speed = 5.0f;
 
-	srand(time(NULL));
+	srand(unsigned int(time(NULL)));
 	vect2 pos;
 	pos.x = 50.0f;
 	pos.y = 250.0f + (double)(rand() % 100);
@@ -23,7 +23,7 @@ PongBall::PongBall(double v)
 {
 	speed = v;
 
-	srand(time(NULL));
+	srand(unsigned int(time(NULL)));
 	vect2 pos;
 	pos.x = 50.0f;
 	pos.y = 250.0f + (double)(rand() % 100);
@@ -57,7 +57,7 @@ void PongBall::setVelocity(vect2 v)
 
 void PongBall::reset()
 {
-	srand(time(NULL));
+	srand(unsigned int(time(NULL)));
 	vect2 pos;
 	pos.x = 50.0f;
 	pos.y = 250.0f + (double)(rand() % 100);
