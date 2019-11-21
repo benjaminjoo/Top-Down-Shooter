@@ -27,41 +27,42 @@
 void physics();
 void bspTree();
 void pong();
+void validateMazeParams(unsigned int& w, unsigned int& h, unsigned int& u, unsigned int& t, unsigned int& s, unsigned int& x, unsigned int& y);
 void maze();
-void maze(unsigned int w, unsigned int h, unsigned int u, unsigned int t);
+void maze(unsigned int w, unsigned int h, unsigned int u, unsigned int t, unsigned int s, unsigned int x, unsigned int y);
 
 
 int main(int argc, char** argv)
 {
-	if (argc == 5)
+	if (argc >= 5)
 	{
 		unsigned int mazeWidth	= unsigned int(atoi(argv[1]));
 		unsigned int mazeHeight = unsigned int(atoi(argv[2]));
 		unsigned int mazeUnit	= unsigned int(atoi(argv[3]));
 		unsigned int mazeThck	= unsigned int(atoi(argv[4]));
+		unsigned int mazeDelay	= 0;
+		unsigned int startX		= 0;
+		unsigned int startY		= 0;
 
-		if (mazeWidth > 256)
-			mazeWidth = 256;
-		if (mazeWidth < 4)
-			mazeWidth = 4;
-		if (mazeHeight > 256)
-			mazeHeight = 256;
-		if (mazeHeight < 4)
-			mazeHeight = 4;
-		if (mazeUnit < 4)
-			mazeUnit = 4;
-		if (mazeThck >= mazeUnit / 2)
-			mazeThck = mazeUnit / 2 - 1;
-		if (mazeThck < 1)
-			mazeThck = 1;
+		if (argc >= 6)
+			mazeDelay = unsigned int(atoi(argv[5]));
 
 
-		std::cout << "Maze Width:		" << mazeWidth << std::endl;
-		std::cout << "Maze Height:		" << mazeWidth << std::endl;
-		std::cout << "Maze Unit:		" << mazeUnit << std::endl;
-		std::cout << "Maze Thickness:	" << mazeThck << std::endl;
+		if (argc == 8)
+		{
+			startX = unsigned int(atoi(argv[6]));
+			startY = unsigned int(atoi(argv[7]));
+		}
 
-		maze(mazeWidth, mazeHeight, mazeUnit, mazeThck);
+		validateMazeParams(mazeWidth, mazeHeight, mazeUnit, mazeThck, mazeDelay, startX, startY);
+
+		std::cout << "Width:		" << mazeWidth	 << std::endl;
+		std::cout << "Height:		" << mazeHeight  << std::endl;
+		std::cout << "Unit:		" << mazeUnit	 << std::endl;
+		std::cout << "Thickness:	" << mazeThck	 << std::endl;
+		std::cout << "Delay:		" << mazeDelay   << std::endl;
+
+		maze(mazeWidth, mazeHeight, mazeUnit, mazeThck, mazeDelay, startX, startY);
 	}
 	else
 	{
@@ -73,6 +74,35 @@ int main(int argc, char** argv)
 	//bspTree();
 
 	return 0;
+}
+
+
+void validateMazeParams(unsigned int& w, unsigned int& h, unsigned int& u, unsigned int& t, unsigned int& s, unsigned int& x, unsigned int& y)
+{
+	if (w >		256)
+		w =		256;
+	if (w <		4)
+		w =		4;
+	if (h >		256)
+		h =		256;
+	if (h <		4)
+		h =		4;
+	if (u <		4)
+		u =		4;
+	if (t >=	u / 2)
+		t =		u / 2 - 1;
+	if (t <		1)
+		t =		1;
+	if (s <		0)
+		s =		0;
+	if (x <		0)
+		x =		0;
+	if (x >=	w)
+		x =		w - 1;
+	if (y <		0)
+		y =		0;
+	if (y >=	h)
+		y =		h - 1;
 }
 
 
@@ -89,7 +119,7 @@ void maze()
 
 	EventHandler Controls;
 
-	Maze Labyrinth(Screen, WIDTH, HEIGHT, UNIT, THCK);
+	Maze Labyrinth(Screen, WIDTH, HEIGHT, UNIT, THCK, 0);
 	Labyrinth.setColour(argbColour(0, 255, 255, 255));
 
 	Screen->clear();
@@ -107,17 +137,19 @@ void maze()
 
 		Screen->update();
 	}
+
+	Screen->exportPng("screenshot.png");
 }
 
 
-void maze(unsigned int w, unsigned int h, unsigned int u, unsigned int t)
+void maze(unsigned int w, unsigned int h, unsigned int u, unsigned int t, unsigned int s, unsigned int x, unsigned int y)
 {
 	auto Screen = std::make_shared<Canvas>(w * u, h * u, 1.0f, "Maze Generation");
 	Screen->setClearColour(argbColour(0, 0, 0, 0));
 
 	EventHandler Controls;
 
-	Maze Labyrinth(Screen, w, h, u, t);
+	Maze Labyrinth(Screen, w, h, u, t, s, x, y);
 	Labyrinth.setColour(argbColour(0, 255, 255, 255));
 
 	Screen->clear();
@@ -135,6 +167,8 @@ void maze(unsigned int w, unsigned int h, unsigned int u, unsigned int t)
 
 		Screen->update();
 	}
+
+	Screen->exportPng("screenshot.png");
 }
 
 

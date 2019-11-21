@@ -1,5 +1,6 @@
 #include <iostream>
 
+
 #include "Maze.h"
 
 
@@ -10,15 +11,15 @@ Maze::Maze(std::shared_ptr<Canvas> S):
 }
 
 
-Maze::Maze(std::shared_ptr<Canvas> S, int w, int h, int u, int t) :
-	Screen(S), width(w), height(h), unit(u), thck(t)
+Maze::Maze(std::shared_ptr<Canvas> S, unsigned int w, unsigned int h, unsigned int u, unsigned int t, unsigned int s) :
+	Screen(S), width(w), height(h), unit(u), thck(t), delay(s)
 {
 	coordStack.push({ currentX, currentY });
 }
 
 
-Maze::Maze(std::shared_ptr<Canvas> S, int w, int h, int u, int t, int x, int y) :
-	Screen(S), width(w), height(h), unit(u), thck(t), currentX(x), currentY(y)
+Maze::Maze(std::shared_ptr<Canvas> S, unsigned int w, unsigned int h, unsigned int u, unsigned int t, unsigned int s, unsigned int x, unsigned int y) :
+	Screen(S), width(w), height(h), unit(u), thck(t), delay(s), currentX(x), currentY(y)
 {
 	coordStack.push({ currentX, currentY });
 }
@@ -111,6 +112,9 @@ void Maze::construct()
 	{
 		if (!isStuck())
 		{
+			if(delay)
+				std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+
 			unsigned int nIndex = neighbourIndex[rand() % neighboursAvailable];
 			neighbourIndex.clear();
 			nVisited++;
@@ -173,7 +177,22 @@ void Maze::construct()
 }
 
 
-void Maze::drawTile(int x, int y)
+void Maze::markCurrent(const int& x, const int& y)
+{
+	int xCurr, yCurr;
+	for (int j = 0; j < unit; j++)
+	{
+		for (int i = 0; i < unit; i++)
+		{
+			xCurr = x * unit + i;
+			yCurr = y * unit + j;
+			Screen->putPixel(xCurr, yCurr, marker);
+		}
+	}
+}
+
+
+void Maze::drawTile(const int& x, const int& y)
 {
 	int xCurr, yCurr;
 	for (int j = thck; j < unit - thck; j++)

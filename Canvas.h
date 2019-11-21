@@ -67,5 +67,7 @@ public:
 	void buildPolyTree(polygon* rootPolyPtr, const std::vector<edge>& edges);
 	void traversePolyTree(polygon* polyTree);
 	void drawPolyTree();
+
+	void exportPng(const std::string& fileName);
 };																							
 

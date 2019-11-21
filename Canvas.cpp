@@ -5,12 +5,13 @@
 #include "Canvas.h"
 #include "Utilities.h"
 #include "Fonts.h"
+#include "lodepng.h"
 
 
 Canvas::Canvas(const int& w, const int& h, const double& s, const std::string& title):
 	width(w), height(h), scale(s)
 {
-	pixelBuffer		= new Uint32[width * height];
+	pixelBuffer	= new Uint32[width * height];
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -976,4 +977,34 @@ void Canvas::drawPolyTree()
 			this->solidFillTriangle(i->vertices[0].onScreen(scale), i->vertices[p + 1].onScreen(scale), i->vertices[p + 2].onScreen(scale), i->colour);
 		}
 	}
+}
+
+
+void Canvas::exportPng(const std::string& fileName)
+{
+	std::vector<uint8_t> rawBuffer;
+
+	uint8_t a, r, g, b;
+	Uint32 colour;
+
+	for (int i = 0; i < width * height; i++)
+	{
+		colour = pixelBuffer[i];
+
+		a = colour >> 24	& 0xFF;
+		r = colour >> 16	& 0xFF;
+		g = colour >> 8		& 0xFF;
+		b = colour			& 0xFF;
+
+		rawBuffer.push_back(a);
+		rawBuffer.push_back(r);
+		rawBuffer.push_back(g);
+		rawBuffer.push_back(b);
+	}
+
+	std::vector<std::uint8_t> imageBuffer;
+	lodepng::encode(imageBuffer, rawBuffer, width, height);
+	lodepng::save_file(imageBuffer, fileName);
+
+	std::cout << "Image file saved..." << std::endl;
 }
