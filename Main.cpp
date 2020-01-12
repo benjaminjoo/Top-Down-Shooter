@@ -22,6 +22,12 @@
 #include "PongBar.h"
 #include "PongGame.h"
 #include "Maze.h"
+#include "Bone.h"
+#include "LongBone.h"
+#include "PelvisBone.h"
+#include "Walker.h"
+#include "Particle.h"
+#include "ParticleSystem.h"
 
 
 void physics();
@@ -30,50 +36,210 @@ void pong();
 void validateMazeParams(unsigned int& w, unsigned int& h, unsigned int& u, unsigned int& t, unsigned int& s, unsigned int& x, unsigned int& y);
 void maze();
 void maze(unsigned int w, unsigned int h, unsigned int u, unsigned int t, unsigned int s, unsigned int x, unsigned int y);
+void walkCycle();
+void particles();
 
 
 int main(int argc, char** argv)
 {
-	if (argc >= 5)
-	{
-		unsigned int mazeWidth	= unsigned int(atoi(argv[1]));
-		unsigned int mazeHeight = unsigned int(atoi(argv[2]));
-		unsigned int mazeUnit	= unsigned int(atoi(argv[3]));
-		unsigned int mazeThck	= unsigned int(atoi(argv[4]));
-		unsigned int mazeDelay	= 0;
-		unsigned int startX		= 0;
-		unsigned int startY		= 0;
-
-		if (argc >= 6)
-			mazeDelay = unsigned int(atoi(argv[5]));
-
-
-		if (argc == 8)
-		{
-			startX = unsigned int(atoi(argv[6]));
-			startY = unsigned int(atoi(argv[7]));
-		}
-
-		validateMazeParams(mazeWidth, mazeHeight, mazeUnit, mazeThck, mazeDelay, startX, startY);
-
-		std::cout << "Width:		" << mazeWidth	 << std::endl;
-		std::cout << "Height:		" << mazeHeight  << std::endl;
-		std::cout << "Unit:		" << mazeUnit	 << std::endl;
-		std::cout << "Thickness:	" << mazeThck	 << std::endl;
-		std::cout << "Delay:		" << mazeDelay   << std::endl;
-
-		maze(mazeWidth, mazeHeight, mazeUnit, mazeThck, mazeDelay, startX, startY);
-	}
-	else
-	{
-		maze();
-	}
+	//if (argc >= 5)
+	//{
+	//	unsigned int mazeWidth	= unsigned int(atoi(argv[1]));
+	//	unsigned int mazeHeight = unsigned int(atoi(argv[2]));
+	//	unsigned int mazeUnit	= unsigned int(atoi(argv[3]));
+	//	unsigned int mazeThck	= unsigned int(atoi(argv[4]));
+	//	unsigned int mazeDelay	= 0;
+	//	unsigned int startX		= 0;
+	//	unsigned int startY		= 0;
+	//
+	//	if (argc >= 6)
+	//		mazeDelay = unsigned int(atoi(argv[5]));
+	//
+	//
+	//	if (argc == 8)
+	//	{
+	//		startX = unsigned int(atoi(argv[6]));
+	//		startY = unsigned int(atoi(argv[7]));
+	//	}
+	//
+	//	validateMazeParams(mazeWidth, mazeHeight, mazeUnit, mazeThck, mazeDelay, startX, startY);
+	//
+	//	std::cout << "Width:		" << mazeWidth	 << std::endl;
+	//	std::cout << "Height:		" << mazeHeight  << std::endl;
+	//	std::cout << "Unit:		" << mazeUnit	 << std::endl;
+	//	std::cout << "Thickness:	" << mazeThck	 << std::endl;
+	//	std::cout << "Delay:		" << mazeDelay   << std::endl;
+	//
+	//	maze(mazeWidth, mazeHeight, mazeUnit, mazeThck, mazeDelay, startX, startY);
+	//}
+	//else
+	//{
+	//	maze();
+	//}
 
 	//pong();
 	//physics();
 	//bspTree();
+	//walkCycle();
+	particles();
 
 	return 0;
+}
+
+
+void particles()
+{	
+	auto Screen = std::make_shared<Canvas>(1200, 600, 1.0f, "Particle System Test");
+	Screen->setClearColour(0x0000000f);
+
+	auto Controls = std::make_shared<EventHandler>(1.0f);
+
+	auto smokeMachine = std::make_shared<ParticleSystem>(vect2(600.0f, 500.0f), vect2(0.0f, -1.0f), 1.0f, 1200, 3);
+	smokeMachine->setDispersion(0.01f);
+	smokeMachine->activate();
+	smokeMachine->setGravity(false);
+
+	while (Controls->isRunning())
+	{
+		Screen->clear();
+
+		Controls->HandleUserEvents();
+
+		smokeMachine->update(Screen, Controls);
+
+		Controls->ceaseMotion();
+
+		Screen->update();
+	}
+}
+
+
+void walkCycle()
+{
+	auto Screen = std::make_shared<Canvas>(1200, 600, 0.5f, "Walk Cycle Visualisation");
+	Screen->setClearColour(argbColour(0, 0, 0, 255));
+
+	EventHandler Controls;
+
+	/**/
+
+	//auto base			= std::make_shared<PelvisBone>("Base");
+	//auto l_1			= std::make_shared<LongBone>("L-1", LEFT,	100.0f);
+	//auto r_1			= std::make_shared<LongBone>("R-1", RIGHT,	100.0f);
+	//base->attachBoneLeft(l_1);
+	//base->attachBoneRight(r_1);
+	//auto l_2			= std::make_shared<LongBone>("L-2", LEFT,	125.0f);
+	//auto r_2			= std::make_shared<LongBone>("R-2", RIGHT,	125.0f);
+	//base->attachBoneLeft(l_2);
+	//base->attachBoneRight(r_2);
+	//auto l_3			= std::make_shared<LongBone>("L-3", LEFT, 150.0f);
+	//auto r_3			= std::make_shared<LongBone>("R-3", RIGHT, 150.0f);
+	//base->attachBoneLeft(l_3);
+	//base->attachBoneRight(r_3);
+	//auto l_4			= std::make_shared<LongBone>("L-4", LEFT, 125.0f);
+	//auto r_4			= std::make_shared<LongBone>("R-4", RIGHT, 125.0f);
+	//base->attachBoneLeft(l_4);
+	//base->attachBoneRight(r_4);
+	//auto l_5			= std::make_shared<LongBone>("L-5", LEFT, 50.0f);
+	//auto r_5			= std::make_shared<LongBone>("R-5", RIGHT, 50.0f);
+	//base->attachBoneLeft(l_5);
+	//base->attachBoneRight(r_5);
+
+	//auto AtSt			= std::make_shared<Walker>(vect2{ 600.0f, 50.0f }, base);
+
+	//AtSt->addRotationKey(LEFT, 0.000f, {  -15.0f, 150.0f,  60.0f,  60.0f });//,   0.0f });
+	//AtSt->addRotationKey(LEFT, 0.125f, {   15.0f, 170.0f,  75.0f,  75.0f });//,   0.0f });
+	//AtSt->addRotationKey(LEFT, 0.250f, {   45.0f, 190.0f, 120.0f,  90.0f });//,   0.0f });
+	//AtSt->addRotationKey(LEFT, 0.375f, {   30.0f, 175.0f,  75.0f,  75.0f });//,   0.0f });
+	//AtSt->addRotationKey(LEFT, 0.500f, {   15.0f, 150.0f,  60.0f,  60.0f });//,   0.0f });
+	//AtSt->addRotationKey(LEFT, 0.625f, {    0.0f, 130.0f,  45.0f,  60.0f });//,   0.0f });
+	//AtSt->addRotationKey(LEFT, 0.750f, {   -5.0f, 110.0f,  30.0f,  60.0f });//,   0.0f });
+	//AtSt->addRotationKey(LEFT, 0.875f, {  -10.0f, 130.0f,  45.0f,  60.0f });//,   0.0f });
+
+	//AtSt->addRotationKey(RIGHT, 0.000f, {  10.0f, 175.0f,  75.0f,  75.0f });//,   0.0f });
+	//AtSt->addRotationKey(RIGHT, 0.125f, {   0.0f, 160.0f,  60.0f,  75.0f });//,   0.0f });
+	//AtSt->addRotationKey(RIGHT, 0.250f, {  -5.0f, 135.0f,  45.0f,  60.0f });//,   0.0f });
+	//AtSt->addRotationKey(RIGHT, 0.375f, { -10.0f, 150.0f,  60.0f,  60.0f });//,   0.0f });
+	//AtSt->addRotationKey(RIGHT, 0.500f, { -15.0f, 150.0f,  60.0f,  60.0f });//,   0.0f });
+	//AtSt->addRotationKey(RIGHT, 0.625f, {  15.0f, 170.0f,  75.0f,  67.5f });//,   0.0f });
+	//AtSt->addRotationKey(RIGHT, 0.750f, {  45.0f, 190.0f, 120.0f,  45.0f });//,   0.0f });
+	//AtSt->addRotationKey(RIGHT, 0.875f, {  15.0f, 185.0f,  85.0f,  60.0f });//,   0.0f });
+
+	//AtSt->updateSkeleton();
+
+	/**/
+
+	auto pelvis			= std::make_shared<PelvisBone>("Pelvis");
+
+	auto left_femur		= std::make_shared<LongBone>("Left Femur", LEFT, 75.0f);
+	auto right_femur	= std::make_shared<LongBone>("Right Femur", RIGHT, 75.0f);
+
+	pelvis->attachBoneLeft(left_femur);
+	pelvis->attachBoneRight(right_femur);
+
+	auto left_tibia		= std::make_shared<LongBone>("Left Tibia", LEFT, 60.0f);
+	auto right_tibia	= std::make_shared<LongBone>("Right Tibia", RIGHT, 60.0f);
+
+	pelvis->attachBoneLeft(left_tibia);
+	pelvis->attachBoneRight(right_tibia);
+
+	auto left_foot		= std::make_shared<LongBone>("Left Foot", LEFT, 20.0f);
+	auto right_foot		= std::make_shared<LongBone>("Right Foot", RIGHT, 20.0f);
+
+	pelvis->attachBoneLeft(left_foot);
+	pelvis->attachBoneRight(right_foot);
+
+	auto Player = std::make_shared<Walker>(vect2{ 600.0f, 50.0f }, pelvis);
+
+	Player->addRotationKey(LEFT,	0.000f, {  60.0f,  75.0f, -30.0f });
+	Player->addRotationKey(LEFT,	0.125f, {  75.0f,  90.0f,   0.0f });
+	Player->addRotationKey(LEFT,	0.250f, {  90.0f, 105.0f,   0.0f });
+	Player->addRotationKey(LEFT,	0.375f, { 105.0f, 112.5f,   0.0f });
+	Player->addRotationKey(LEFT,	0.500f, { 120.0f, 120.0f,  30.0f });
+	Player->addRotationKey(LEFT,	0.625f, { 105.0f, 135.0f,  60.0f });
+	Player->addRotationKey(LEFT,	0.750f, {  90.0f, 120.0f,  45.0f });
+	Player->addRotationKey(LEFT,	0.875f, {  75.0f,  90.0f,  15.0f });
+
+	Player->addRotationKey(RIGHT,	0.000f, { 120.0f, 120.0f,  30.0f });
+	Player->addRotationKey(RIGHT,	0.125f, { 105.0f, 135.0f,  60.0f });
+	Player->addRotationKey(RIGHT,	0.250f, {  90.0f, 120.0f,  45.0f });
+	Player->addRotationKey(RIGHT,	0.375f, {  75.0f,  90.0f,  15.0f });
+	Player->addRotationKey(RIGHT,	0.500f, {  60.0f,  75.0f, -30.0f });
+	Player->addRotationKey(RIGHT,	0.625f, {  75.0f,  90.0f,   0.0f });
+	Player->addRotationKey(RIGHT,	0.750f, {  90.0f, 105.0f,   0.0f });
+	Player->addRotationKey(RIGHT,	0.875f, { 105.0f, 112.5f,   0.0f });
+
+	Player->updateSkeleton();
+
+	/**/
+
+	Controls.paused = true;
+
+	while (Controls.isRunning())
+	{
+		Screen->clear();
+
+		Controls.HandleUserEvents();
+
+
+		if (!Controls.paused)
+			Player->updateSkeleton();
+		
+		Player->drawSkeleton(Screen);
+		
+		Player->plotRotation(LEFT, Screen);
+		Player->plotCurrentRotation(LEFT, Screen);
+
+		//if (!Controls.paused)
+		//	AtSt->updateSkeleton();
+		//
+		//AtSt->drawSkeleton(Screen);
+		//AtSt->plotRotation(LEFT, Screen);
+		//AtSt->plotCurrentRotation(LEFT, Screen);
+
+
+		Screen->update();
+	}
 }
 
 

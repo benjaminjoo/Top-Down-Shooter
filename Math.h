@@ -35,6 +35,13 @@ void swap(T& a, T& b)
 }
 
 
+union colour32
+{
+	unsigned argb = 0;
+	unsigned char c[4];
+};
+
+
 struct screenCoord
 {
 	int x = 0;
@@ -120,7 +127,7 @@ struct vect2
 
 	inline vect2	operator +	(const vect2& v)	{ return vect2(this->x + v.x, this->y + v.y);	}
 	inline vect2	operator -	(const vect2& v)	{ return vect2(this->x - v.x, this->y - v.y);	}
-	inline vect2	operator += (const vect2& v)	{ return vect2(this->x += v.x, this->y += v.y); }
+	inline vect2	operator += (const vect2& v)	{ this->x += v.x, this->y += v.y; return *this; }
 	inline vect2	operator -= (const vect2& v)	{ return vect2(this->x -= v.x, this->y -= v.y); }
 	inline double	operator *	(const vect2& v)	{ return this->x * v.x + this->y * v.y;			}
 	inline vect2	operator *	(const double& s)	{ return vect2(this->x * s, this->y * s);		}
@@ -133,6 +140,7 @@ struct vect2
 	inline vect2 norm() { return *this / this->len(); }
 	inline vect2 rot(const double& a) { return vect2(this->x * cos(a) - this->y * sin(a), this->y * cos(a) + this->x * sin(a)); }
 	inline screenCoord onScreen(const double& s) { return screenCoord( (int)(this->x * s), (int)(this->y * s)); }
+	inline screenCoord onScreenFlipped(const double& s, const int& h) { return screenCoord((int)(this->x * s), h - (int)(this->y * s)); }
 
 };
 

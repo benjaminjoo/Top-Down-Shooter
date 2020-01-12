@@ -160,12 +160,15 @@ void Maze::construct()
 			tiles[currentY * width + currentX].visit();		
 			neighboursAvailable = 0;
 			coordStack.push({ currentX, currentY });
+			std::cout << "Elements on stack: (+) " << coordStack.size() << std::endl;
 		
 			drawTile(currentX, currentY);
 		}
 		else
 		{
 			coordStack.pop();
+			std::cout << "Elements on stack: (-) " << coordStack.size() << std::endl;
+
 			currentX = coordStack.top().x;
 			currentY = coordStack.top().y;
 		}		

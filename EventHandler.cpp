@@ -11,6 +11,7 @@ EventHandler::EventHandler()
 
 	paused			= false;
 	firing			= false;
+	gravity			= false;
 
 	showStats		= false;
 
@@ -27,6 +28,31 @@ EventHandler::EventHandler()
 }
 
 
+EventHandler::EventHandler(const double& stp)
+{
+	running			= true;
+
+	event			= { 0 };
+
+	paused			= false;
+	firing			= false;
+	gravity			= false;
+
+	showStats		= false;
+
+	turn			= 0.0f;
+	move			= 0.0f;
+	strafe			= 0.0f;
+
+	step_speed		= stp;
+	turn_speed		= 0.0f;
+
+	sensitivity		= 0.0f;
+
+	std::cout << "EventHandler created sussecfully..." << std::endl;
+}
+
+
 EventHandler::EventHandler(const double& turn_, const double& move_, const double& strf_, const double& sens_)
 {
 	running			= true;
@@ -35,6 +61,7 @@ EventHandler::EventHandler(const double& turn_, const double& move_, const doubl
 
 	paused			= false;
 	firing			= false;
+	gravity			= false;
 
 	showStats		= true;
 
@@ -221,6 +248,9 @@ void EventHandler::HandleUserEvents()
 				break;
 			case SDLK_TAB:
 				showStats = showStats ? false : true;
+				break;
+			case SDLK_g:
+				gravity = gravity ? false : true;
 				break;
 			case SDLK_p:
 				paused = paused ? false : true;
